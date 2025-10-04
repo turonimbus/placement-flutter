@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/animation.dart';
 import 'package:placement/resources/endpoints.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:placement/resources/strings.dart';
 import 'package:placement/services/auth/auth_service.dart';
 import 'package:placement/shared/loadingPage.dart';
@@ -187,6 +185,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                   'password': _passwordController.text
                 };
                 var res = await _auth.signInWithEmailPassword(dataMap);
+                if (!mounted) return;
                 print("Signed IN!! with $res");
                 if (res == 0) {
                   Navigator.of(context).pushNamedAndRemoveUntil(
