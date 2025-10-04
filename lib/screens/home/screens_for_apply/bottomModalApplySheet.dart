@@ -9,19 +9,19 @@ import 'package:placement/services/generic/requestService.dart';
 import 'package:placement/shared/loadingPage.dart';
 
 class BottomModalApplySheet extends StatefulWidget {
-  BottomModalApplySheet({Key key, this.profile}) : super(key: key);
-  final profile;
+  BottomModalApplySheet({super.key, required this.profile});
+  final dynamic profile;
 
   @override
   _BottomModalApplySheetState createState() => _BottomModalApplySheetState();
 }
 
 class _BottomModalApplySheetState extends State<BottomModalApplySheet> {
-  var profile;
+  late dynamic profile;
   var _fetch;
-  RequestService _requestService;
-  List<ResumeModel> _resumeList;
-  Future<dynamic> _resumeFuture;
+  late RequestService _requestService;
+  late List<ResumeModel> _resumeList;
+  late Future<dynamic> _resumeFuture;
 
   @override
   void initState() {

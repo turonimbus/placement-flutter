@@ -8,14 +8,14 @@ class ResultPageViewModel extends BaseViewModel {
   
   final ScrollController _scrollController = ScrollController();
   GlobalCache _cache = locator<GlobalCache>();
-  int _yearSelectionVariable;
-  int _resultTypeVariable; 
-  int _sortVariable;
+  int? _yearSelectionVariable;
+  int? _resultTypeVariable; 
+  int? _sortVariable;
   bool _isDisposed = false;
 
-  int get yearSelectionVariable => _yearSelectionVariable;
-  int get resultTypeVariable => _resultTypeVariable;
-  int get sortVariable => _sortVariable;
+  int? get yearSelectionVariable => _yearSelectionVariable;
+  int? get resultTypeVariable => _resultTypeVariable;
+  int? get sortVariable => _sortVariable;
   ScrollController get scrollController => _scrollController;
 
   @override
@@ -36,16 +36,16 @@ class ResultPageViewModel extends BaseViewModel {
       _resultTypeVariable = 0;
       _sortVariable = 0;
     } else {
-      _yearSelectionVariable = _cache.filterFields['year'];
-      _resultTypeVariable = _cache.filterFields['type'];
-      _sortVariable = _cache.filterFields['sort'];
+      _yearSelectionVariable = _cache.filterFields!['year'];
+      _resultTypeVariable = _cache.filterFields!['type'];
+      _sortVariable = _cache.filterFields!['sort'];
     }
   }
 
   void _cacheFields() {
-    _cache.filterFields['year'] = _yearSelectionVariable;
-    _cache.filterFields['type'] = _resultTypeVariable;
-    _cache.filterFields['sort'] = _sortVariable;
+    _cache.filterFields!['year'] = _yearSelectionVariable;
+    _cache.filterFields!['type'] = _resultTypeVariable;
+    _cache.filterFields!['sort'] = _sortVariable;
   }
 
   void _notif() {

@@ -1,7 +1,7 @@
 class SelectedStudentModel {
-  final String studentName;
-  final String studentBranchName;
-  final int studentEnrolmentNumber;
+  final String? studentName;
+  final String? studentBranchName;
+  final int? studentEnrolmentNumber;
 
   SelectedStudentModel({
     this.studentName,

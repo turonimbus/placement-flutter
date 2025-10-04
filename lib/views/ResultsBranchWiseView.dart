@@ -5,9 +5,14 @@ import 'package:placement/views/baseView.dart';
 
 class ResultsBranchWiseView extends StatelessWidget {
   final int yearSelector, internSwitch, sortSwitch;
-  const ResultsBranchWiseView(
-      {Key key, this.yearSelector, this.internSwitch, this.sortSwitch})
-      : super(key: key);
+
+  // FIX 1: Updated to modern, required constructor parameters.
+  const ResultsBranchWiseView({
+    super.key,
+    required this.yearSelector,
+    required this.internSwitch,
+    required this.sortSwitch,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,63 +24,72 @@ class ResultsBranchWiseView extends StatelessWidget {
     );
   }
 
-  Widget _resultDisplay(
-      BuildContext context, ResultsBranchWiseViewModel model) {
-    bool changed = (model.yearIndex != yearSelector) ||
+  Widget _resultDisplay(BuildContext context, ResultsBranchWiseViewModel model) {
+    bool filtersHaveChanged = (model.yearIndex != yearSelector) ||
         (model.internSwitch != internSwitch) ||
         (model.sortSwitch != sortSwitch);
-    if (changed) model.setResultFilter(yearSelector, internSwitch, sortSwitch);
-    return (changed)
-        ? Center(
-            child: LoadingPage(),
-          )
-        : (model.branchResults == null)
-            ? Center(
-                child: Text("No Results Found"),
-              )
-            : RefreshIndicator(
-                onRefresh: model.refreshResults,
-                child: ListView.builder(
-                  itemCount: model.branchResults.length,
-                  padding: EdgeInsets.all(0),
-                  itemBuilder: (context, index) {
-                    return Card(
-                      elevation: 0.3,
-                      margin: EdgeInsets.only(bottom: 1, top: 0),
-                      child: ListTile(
-                        title: Text(
-                          model.branchResults[index].studentBranchName,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              height: 1.1,
-                              fontSize: 15),
-                        ),
-                        subtitle: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Degree: " +  model.branchResults[index].studentDegree,
-                              style: TextStyle(height: 1.85),
-                            ),
-                            Text(
-                              "Selected: " +  model.branchResults[index].selected,
-                              style: TextStyle(height: 1.85),
-                            ),
-                          ],
-                        ),
-                        onTap: () {
-                          Navigator.of(context).pushNamed(
-                              '/result_details_branchwise',
-                              arguments: {
-                                'url':
-                                model.branchResults[index].studentDetails,
-                                'sort': sortSwitch
-                              });
-                        },
-                      ),
-                    );
-                  },
-                ),
-        );
+
+    if (filtersHaveChanged) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        model.setResultFilter(yearSelector, internSwitch, sortSwitch);
+      });
+      return Center(
+        child: LoadingPage(),
+      );
     }
+    
+    if (model.branchResults == null) {
+      return const Center(
+        child: Text("No Results Found"),
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: model.refreshResults,
+      child: ListView.builder(
+        itemCount: model.branchResults.length,
+        padding: EdgeInsets.zero,
+        itemBuilder: (context, index) {
+          final result = model.branchResults[index];
+          return Card(
+            elevation: 0.3,
+            margin: const EdgeInsets.only(bottom: 1),
+            child: ListTile(
+              title: Text(
+                result.studentBranchName!,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  height: 1.1,
+                  fontSize: 15,
+                ),
+              ),
+              subtitle: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // FIX 3: Using string interpolation for better readability.
+                  Text(
+                    "Degree: ${result.studentDegree}",
+                    style: const TextStyle(height: 1.85),
+                  ),
+                  Text(
+                    "Selected: ${result.selected}",
+                    style: const TextStyle(height: 1.85),
+                  ),
+                ],
+              ),
+              onTap: () {
+                Navigator.of(context).pushNamed(
+                  '/result_details_branchwise',
+                  arguments: {
+                    'url': result.studentDetails,
+                    'sort': sortSwitch,
+                  },
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
 }

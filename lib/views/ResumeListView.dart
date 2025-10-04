@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:placement/shared/loadingPage.dart';
-import 'package:placement/viewmodels/ResumeListViewModel.dart';
-import 'package:placement/views/baseView.dart';
+
+import '../shared/loadingPage.dart';
+import '../viewmodels/ResumeListViewModel.dart';
+import 'baseView.dart';
 
 class ResumeListView extends StatelessWidget {
-  const ResumeListView({Key key}) : super(key: key);
+  const ResumeListView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -64,15 +65,15 @@ class ResumeListView extends StatelessWidget {
           elevation: 0.3,
           child: ListTile(
             onTap: () async {
-              await model.launchURL(model.resumes[index].resumeUrl);
+              await model.launchURL(model.resumes[index].resumeUrl!);
             },
             title: Text(
-              model.resumes[index].title,
+              model.resumes[index].title!,
               style: TextStyle(
                   fontWeight: FontWeight.bold, height: 1.1, fontSize: 15),
             ),
             subtitle: Text(
-              "Verified: " + ((model.resumes[index].isVerified) ? "Yes" : "No"),
+              "Verified: " + ((model.resumes[index].isVerified ?? false) ? "Yes" : "No"),
               style: TextStyle(height: 1.85),
             ),
           ),

@@ -10,13 +10,13 @@ class ResultsBranchWiseViewModel extends BaseViewModel {
   ResultService _resultService = locator<ResultService>();
   GlobalCache _cache = locator<GlobalCache>();
   List<BranchConciseModel> _branchResults = [];
-  int _yearIndex, _internSwitch, _sortSwitch;
+  int? _yearIndex, _internSwitch, _sortSwitch;
   bool _isDisposed = false;
 
   List<BranchConciseModel> get branchResults => _branchResults;
-  int get yearIndex => _yearIndex;
-  int get internSwitch => _internSwitch;
-  int get sortSwitch => _sortSwitch;
+  int? get yearIndex => _yearIndex;
+  int? get internSwitch => _internSwitch;
+  int? get sortSwitch => _sortSwitch;
 
   @override
   void dispose() { 
@@ -24,7 +24,7 @@ class ResultsBranchWiseViewModel extends BaseViewModel {
     super.dispose();
   }
 
-  void setResultFilter(int yrIndex, int internSwitcher, int sortSwitch) {
+  void setResultFilter(int? yrIndex, int? internSwitcher, int? sortSwitch) {
     _yearIndex = yrIndex;
     _internSwitch = internSwitcher;
     _sortSwitch = sortSwitch;
@@ -41,10 +41,10 @@ class ResultsBranchWiseViewModel extends BaseViewModel {
   }
 
   Future<void> _populateResults() async {
-    _branchResults = await _resultService.branchWiseResults(_yearIndex, _internSwitch);
+    _branchResults = (await _resultService.branchWiseResults(_yearIndex!, _internSwitch!))!;
     if(_sortSwitch == 1) {
       _branchResults.sort(
-        (a,b) => a.studentBranchName.compareTo(b.studentBranchName)
+        (a,b) => a.studentBranchName!.compareTo(b.studentBranchName!)
       );
     }
     notif();

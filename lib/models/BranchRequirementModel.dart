@@ -3,11 +3,11 @@ import 'package:placement/models/DepartmentModel.dart';
 
 class BranchRequirementModel {
   
-  int id;
-  String code,
+  int? id;
+  String? code,
     name;
-  DegreeModel degree;
-  DepartmentModel department;
+  DegreeModel? degree;
+  DepartmentModel? department;
 
   BranchRequirementModel({
     this.code,

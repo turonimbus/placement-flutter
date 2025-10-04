@@ -4,7 +4,7 @@ import 'package:placement/models/RoundSetModel.dart';
 import 'package:placement/models/applicationModel.dart';
 
 class DetailCompanyProfileModel {
-  int id,
+  int? id,
     applicationCost,
     packageCtcUg,
     packageCtcPg,
@@ -13,9 +13,9 @@ class DetailCompanyProfileModel {
     packageBasePg,
     packageBasePhd,
     talkAbsenceCost;
-  CompanyDetailModel company;
+  CompanyDetailModel? company;
   dynamic application;
-  String name,
+  String? name,
     profileStatus,
     category,
     cgpaRequirement,
@@ -27,10 +27,10 @@ class DetailCompanyProfileModel {
     applicationDeadline,
     talkDate,
     talkStatus;
-  bool requiresCoverLetter,
+  bool? requiresCoverLetter,
     talkPresenceRequired;
-  List<BranchRequirementModel> branchRequirement;
-  final List<RoundSetModel> roundSet;
+  List<BranchRequirementModel>? branchRequirement;
+  final List<RoundSetModel>? roundSet;
 
   DetailCompanyProfileModel({
     this.application, this.applicationDeadline, this.category,

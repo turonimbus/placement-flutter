@@ -8,8 +8,8 @@ import 'package:placement/shared/loadingPage.dart';
 import 'package:provider/provider.dart';
 
 class ResultsCompanyWise extends StatefulWidget {
-  bool resultType;
-  ResultsCompanyWise({Key key, this.resultType}) : super(key: key);
+  bool? resultType;
+  ResultsCompanyWise({super.key, this.resultType});
 
   @override
   _ResultsCompanyWiseState createState() => _ResultsCompanyWiseState();
@@ -46,14 +46,14 @@ class _ResultsCompanyWiseState extends State<ResultsCompanyWise> {
         return ListView.builder(
           shrinkWrap: true,
           padding: EdgeInsets.all(0),
-          itemCount: snapshot.data.length,
+          itemCount: snapshot.data!.length,
           itemBuilder: (context, index) {
             return Card(
               margin: EdgeInsets.only(bottom: 1),
               elevation: 0.2,
               child: ListTile(
                 title: Text(
-                  snapshot.data[index].companyName,
+                  snapshot.data![index].companyName,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
@@ -65,7 +65,7 @@ class _ResultsCompanyWiseState extends State<ResultsCompanyWise> {
                       style: TextStyle(height: 1.85),
                     ),
                     Text(
-                      snapshot.data[index].selected,
+                      snapshot.data![index].selected,
                       style: TextStyle(
                           height: 1.85,
                           color: Colors.blue,
@@ -75,7 +75,7 @@ class _ResultsCompanyWiseState extends State<ResultsCompanyWise> {
                 ),
                 onTap: () {
                   Navigator.of(context).pushNamed('/result_details_companywise',
-                      arguments: snapshot.data[index].detail);
+                      arguments: snapshot.data![index].detail);
                 },
               ),
             );

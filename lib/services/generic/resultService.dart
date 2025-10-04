@@ -15,7 +15,7 @@ class ResultService {
   final GlobalCache _cache = locator<GlobalCache>();
   FetchedResources _fetchedResources = FetchedResources();
 
-  Future<List<CompanyConciseModel>> companyWiseResults(int yearIndex, int internSwitch) async {
+  Future<List<CompanyConciseModel>?> companyWiseResults(int yearIndex, int internSwitch) async {
     List<CompanyConciseModel> _companyResults = [];
     if(_cache.companyWiseResults == null) {
       var _data = await _requestService.makeGetRequest(
@@ -35,7 +35,7 @@ class ResultService {
     return _cache.companyWiseResults;
   }
 
-  Future<List<BranchConciseModel>> branchWiseResults(int yearIndex, int internSwitch) async {
+  Future<List<BranchConciseModel>?> branchWiseResults(int yearIndex, int internSwitch) async {
     List<BranchConciseModel> _branchResults = [];
     if(_cache.branchWiseResults == null) {
       var _data = await _requestService.makeGetRequest(

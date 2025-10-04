@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
-  final args;
-  ProfilePage({Key key, this.args}) : super(key: key);
+  final dynamic args;
+  ProfilePage({super.key, this.args});
 
   @override
   _ProfilePageState createState() => _ProfilePageState();

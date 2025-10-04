@@ -1,15 +1,17 @@
-import 'package:placement/locator.dart';
-import 'package:placement/models/candidateModel.dart';
-import 'package:placement/services/auth/auth_service.dart';
-import 'package:placement/services/generic/applyService.dart';
-import 'package:placement/viewmodels/BaseViewModel.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
+import '../locator.dart';
+import '../models/candidateModel.dart';
+import '../services/auth/auth_service.dart';
+import '../services/generic/applyService.dart';
+import 'BaseViewModel.dart';
+import '../models/placement_exception.dart';
 
 class CandidateDetailsViewModel extends BaseViewModel {
   ApplyService _applyService = locator<ApplyService>();
-  CandidateModel _candidate;
+  CandidateModel? _candidate;
   AuthService _auth = AuthService();
-  CandidateModel get candidate => _candidate;
+  CandidateModel? get candidate => _candidate;
 
   Future<void> fetchCandidate() async {
     setLoading();
@@ -17,11 +19,11 @@ class CandidateDetailsViewModel extends BaseViewModel {
     setIdle();
   }
 
-  void launchURL(String url) async {
+  Future<void> launchURL(String url) async {
     if (await canLaunchUrlString(url)) {
       await launchUrlString(url);
     } else {
-      throw 'Could not launch $url';
+      throw PlacementException('Could not launch $url');
     }
   }
 

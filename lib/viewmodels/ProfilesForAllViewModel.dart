@@ -50,17 +50,17 @@ class ProfilesForAllViewModel extends BaseViewModel {
 
   String formatDate(String it) {
     if(it == "") return "-";
-    return Jiffy(it).yMMMd + " - " + Jiffy(it).Hm;
+    return Jiffy.parse(it).toLocal().yMMMd + " - " + Jiffy.parse(it).toLocal().Hm;
   }
 
   String profileStatus(int index) {
     if(_profiles[index].status == "locked") return _profiles[index].application.statusDisplayName;
     else if(_profiles[index].status == "open" && _profiles[index].applicationDeadline !=null) {
-      String date = "Apply before " + formatDate(_profiles[index].applicationDeadline);
+      String date = "Apply before " + formatDate(_profiles[index].applicationDeadline!);
       return date;
     }
     else if(_profiles[index].status == "withdrawable") return _profiles[index].application.resume.title + " Sent";
-    return ModelResources.analyseProfileStatus(_profiles[index].status);
+    return ModelResources.analyseProfileStatus(_profiles[index].status!);
   }
 
   Future<void> deleteApplication(int applicationId) async {

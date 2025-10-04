@@ -1,11 +1,11 @@
 class BranchWiseStudentModel {
-  final int studentEnrolmentNumber;
+  final int? studentEnrolmentNumber;
   final String studentName;
-  final String companyName;
+  final String? companyName;
 
   BranchWiseStudentModel({
     this.studentEnrolmentNumber,
-    this.studentName,
+    required this.studentName,
     this.companyName
   });
 

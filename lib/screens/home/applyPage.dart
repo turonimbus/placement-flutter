@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:placement/resources/strings.dart';
-import 'package:placement/screens/home/screens_for_apply/profilesForAllScreen.dart';
-import 'package:placement/screens/home/screens_for_apply/profilesForMeScreen.dart';
 import 'package:placement/views/ProfilesForAllView.dart';
 import 'package:placement/views/ProfilesForMeView.dart';
 
 class ApplyPage extends StatefulWidget {
-  ApplyPage({Key key}) : super(key: key);
+  ApplyPage({super.key});
   @override
   _ApplyPageState createState() => _ApplyPageState();
 }
 
 class _ApplyPageState extends State<ApplyPage>
     with SingleTickerProviderStateMixin {
-  TabController _tabController;
-  ScrollController _scrollController;
+  late TabController _tabController;
+  late ScrollController _scrollController;
 
   @override
   void initState() {
@@ -41,8 +39,8 @@ class _ApplyPageState extends State<ApplyPage>
 
   @override
   Widget build(BuildContext context) {
-    final double _width = MediaQuery.of(context).size.width;
-    final double _height = MediaQuery.of(context).size.height;
+    // final double _width = MediaQuery.of(context).size.width;
+    // final double _height = MediaQuery.of(context).size.height;
     return NestedScrollView(
       controller: _scrollController,
       headerSliverBuilder: (BuildContext context, bool boxIsScrolled) {
@@ -70,11 +68,12 @@ class _ApplyPageState extends State<ApplyPage>
     );
   }
 
-  Widget _profilesListPage(BuildContext context) {
+  PreferredSizeWidget _profilesListPage(BuildContext context) {
     return TabBar(
       controller: _tabController,
       tabs: _profileTabs,
-      unselectedLabelColor: Colors.white70,
+      unselectedLabelColor: Colors.white60,
+      labelColor: Colors.white,
       indicatorPadding: EdgeInsets.only(top: 10),
       indicatorColor: Colors.white,
       indicatorWeight: 6.0,

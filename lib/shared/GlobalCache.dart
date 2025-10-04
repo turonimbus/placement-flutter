@@ -10,15 +10,15 @@ class GlobalCache {
    * "year" - the year index, 0 implies current year, 1 the year before and so on...
    * "type" - 0 means internship, 1 means placement
    */
-  Map<String, dynamic> filterFields;
+  Map<String, dynamic>? filterFields;
 
-  CandidateModel candidateData;
+  CandidateModel? candidateData;
 
-  List<CompanyConciseModel> companyWiseResults;
+  List<CompanyConciseModel>? companyWiseResults;
 
-  List<BranchConciseModel> branchWiseResults;
+  List<BranchConciseModel>? branchWiseResults;
 
-  List<ProfilesModel> profilesForMe;
+  List<ProfilesModel>? profilesForMe;
 
-  List<ProfilesModel> profilesOpenForAll;
+  List<ProfilesModel>? profilesOpenForAll;
 }

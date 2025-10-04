@@ -6,8 +6,8 @@ import 'package:placement/viewmodels/CompanyDetailViewModel.dart';
 import 'package:placement/views/baseView.dart';
 
 class CompanyDetailView extends StatelessWidget {
-  final Map<String, dynamic> args;
-  const CompanyDetailView({Key key, this.args}) : super(key: key);
+  final dynamic args;
+  const CompanyDetailView({super.key, required this.args});
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +79,7 @@ class CompanyDetailView extends StatelessWidget {
   Widget _roundSet(
       BuildContext context, CompanyDetailViewModel model, double _width) {
     int inx = 0;
-    return (model.companyProfile.roundSet.length == 0)
+    return (model.companyProfile!.roundSet!.length == 0)
         ? Container()
         : Container(
             width: _width * 0.9,
@@ -93,11 +93,11 @@ class CompanyDetailView extends StatelessWidget {
                 ),
                 Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: model.companyProfile.roundSet.map((val) {
+                  children: model.companyProfile!.roundSet!.map((val) {
                     return _rowItem(
                         context,
-                        val.name,
-                        Jiffy(val.date).yMMMd + ", " + model.getTime(val.time),
+                        val.name!,
+                        Jiffy.parse(val.date!).toLocal().yMMMd + ", " + model.getTime(val.time!),
                         (inx++) % 2 == 0);
                   }).toList(),
                 ),
@@ -119,22 +119,22 @@ class CompanyDetailView extends StatelessWidget {
                 _rowItemDual(
                     context,
                     "Under Graduate",
-                    model.formatInt(model.companyProfile.packageCtcUg),
-                    model.formatInt(model.companyProfile.packageBaseUg),
+                    model.formatInt(model.companyProfile!.packageCtcUg),
+                    model.formatInt(model.companyProfile!.packageBaseUg),
                     true,
                     visible: model.checkPackage("ug")),
                 _rowItemDual(
                     context,
                     "Post Graduate",
-                    model.formatInt(model.companyProfile.packageCtcPg),
-                    model.formatInt(model.companyProfile.packageBasePg),
+                    model.formatInt(model.companyProfile!.packageCtcPg),
+                    model.formatInt(model.companyProfile!.packageBasePg),
                     false,
                     visible: model.checkPackage("pg")),
                 _rowItemDual(
                     context,
                     "PHd",
-                    model.formatInt(model.companyProfile.packageCtcPhd),
-                    model.formatInt(model.companyProfile.packageBasePhd),
+                    model.formatInt(model.companyProfile!.packageCtcPhd),
+                    model.formatInt(model.companyProfile!.packageBasePhd),
                     true,
                     visible: model.checkPackage("phd")),
               ],
@@ -145,7 +145,7 @@ class CompanyDetailView extends StatelessWidget {
 
   Widget _profileDetail(
       BuildContext context, CompanyDetailViewModel model, double _width) {
-    print("REBUILD!! + ${model.companyProfile.packageDescription.toString()}");
+    print("REBUILD!! + ${model.companyProfile!.packageDescription.toString()}");
     return Container(
       width: _width * 0.9,
       child: Column(
@@ -157,41 +157,41 @@ class CompanyDetailView extends StatelessWidget {
             height: 5,
           ),
           _rowItem(context, "Profile Name",
-              model.formatIt(model.companyProfile.name), true),
+              model.formatIt(model.companyProfile!.name), true),
           _rowItem(context, "Profile Category",
-              model.formatIt(model.companyProfile.category), false),
+              model.formatIt(model.companyProfile!.category), false),
           _rowItem(context, "CGPA Requirement",
-              model.formatIt(model.companyProfile.cgpaRequirement), true),
+              model.formatIt(model.companyProfile!.cgpaRequirement), true),
           _rowItem(context, "Description",
-              model.formatIt(model.companyProfile.description), false),
+              model.formatIt(model.companyProfile!.description), false),
           _rowItem(
-              context, "Post", model.formatIt(model.companyProfile.post), true),
+              context, "Post", model.formatIt(model.companyProfile!.post), true),
           _rowItem(context, "Posting Location",
-              model.formatIt(model.companyProfile.location), false),
+              model.formatIt(model.companyProfile!.location), false),
           _rowItem(context, "Package Description",
-              model.formatIt(model.companyProfile.packageDescription), true),
+              model.formatIt(model.companyProfile!.packageDescription), true),
           _rowItem(context, "Cover Letter Required",
-              (model.companyProfile.requiresCoverLetter) ? "Yes" : "No", false),
+              (model.companyProfile!.requiresCoverLetter!) ? "Yes" : "No", false),
           _rowItem(context, "Target Credit Pool",
-              model.formatIt(model.companyProfile.targetCreditPool), true),
+              model.formatIt(model.companyProfile!.targetCreditPool), true),
           _rowItem(
               context,
               "PPT Presence Required",
-              (model.companyProfile.talkPresenceRequired) ? "Yes" : "No",
+              (model.companyProfile!.talkPresenceRequired!) ? "Yes" : "No",
               false),
           _rowItem(context, "PPT Date",
-              model.formatDate(model.companyProfile.talkDate), true),
+              model.formatDate(model.companyProfile!.talkDate), true),
           _rowItem(context, "PPT Absence Cost",
-              model.companyProfile.talkAbsenceCost.toString(), false),
+              model.companyProfile!.talkAbsenceCost.toString(), false),
           _rowItem(context, "PPT Status",
-              model.formatIt(model.companyProfile.talkStatus), true),
+              model.formatIt(model.companyProfile!.talkStatus!), true),
           _rowItem(
               context,
               "Application Deadline",
-              model.formatDate(model.companyProfile.applicationDeadline),
+              model.formatDate(model.companyProfile!.applicationDeadline),
               false),
           _rowItem(context, "Application Cost",
-              model.companyProfile.applicationCost.toString(), true),
+              model.companyProfile!.applicationCost.toString(), true),
         ],
       ),
     );
@@ -284,12 +284,12 @@ class CompanyDetailView extends StatelessWidget {
       ),
       child: ExpansionTile(
         title: Text("View Eligible Branches"),
-        children: model.companyProfile.branchRequirement
+        children: model.companyProfile!.branchRequirement!
             .map((val) => Container(
                   width: _width * 0.9,
                   padding: EdgeInsets.fromLTRB(5, 5, 0, 5),
                   child: Text(
-                    val.name,
+                    val.name!,
                     overflow: TextOverflow.clip,
                     style: TextStyle(color: Color(0xFF666666)),
                   ),
@@ -309,7 +309,7 @@ class CompanyDetailView extends StatelessWidget {
         children: <Widget>[
           _sectionHeading("Description"),
           Text(
-            model.companyProfile.company.description,
+            model.companyProfile!.company!.description!,
             style: TextStyle(color: Color(0xFF666666)),
           )
         ],
@@ -326,21 +326,21 @@ class CompanyDetailView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            model.companyProfile.company.name +
+            model.companyProfile!.company!.name! +
                 " (" +
-                model.companyProfile.name +
+                model.companyProfile!.name! +
                 ")",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
           ),
           Text(
-            model.companyProfile.company.sector,
+            model.companyProfile!.company!.sector!,
             style: TextStyle(color: Color(0xFF666666)),
           ),
           SizedBox(
             height: 20,
           ),
           Text(
-            "Last Date of Application : ${model.formatDate(model.companyProfile.applicationDeadline)}",
+            "Last Date of Application : ${model.formatDate(model.companyProfile!.applicationDeadline)}",
             style: TextStyle(fontWeight: FontWeight.bold),
           )
         ],
@@ -362,7 +362,7 @@ class CompanyDetailView extends StatelessWidget {
       BuildContext context, CompanyDetailViewModel model, double _width) {
     dynamic parentViewModel = args["parentViewModel"];
     dynamic profileModel = args["profileModel"];
-    switch (model.companyProfile.profileStatus) {
+    switch (model.companyProfile!.profileStatus) {
       case 'branch_not_eligible':
         return InkWell(
           child: _buttonContainer(
@@ -474,7 +474,7 @@ class CompanyDetailView extends StatelessWidget {
                           child: Text("Sure"),
                           onPressed: () async {
                             await parentViewModel.deleteApplication(
-                                model.companyProfile.application.id);
+                                model.companyProfile!.application.id);
                             model.refreshDetails();
                             Navigator.of(context).pop();
                           },

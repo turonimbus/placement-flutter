@@ -1,12 +1,12 @@
 import 'package:placement/models/resumeModel.dart';
 
 class ApplicationModel {
-  int id;
-  String status,
+  int? id;
+  String? status,
     profileName,
     profileStatus,
     statusDisplayName;
-  ResumeModel resume;
+  ResumeModel? resume;
 
   ApplicationModel({
     this.id,

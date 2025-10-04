@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:placement/shared/loadingPage.dart';
-import 'package:placement/viewmodels/ProfilesAppliedViewModel.dart';
-import 'package:placement/views/baseView.dart';
+
+import '../shared/loadingPage.dart';
+import '../viewmodels/ProfilesAppliedViewModel.dart';
+import 'baseView.dart';
 
 class ProfilesAppliedView extends StatelessWidget {
-  const ProfilesAppliedView({Key key}) : super(key: key);
+  const ProfilesAppliedView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +59,7 @@ class ProfilesAppliedView extends StatelessWidget {
           margin: EdgeInsets.only(bottom: 1),
           child: ListTile(
             title: Text(
-              model.profiles[index].companyName,
+              model.profiles[index].companyName!,
               style: TextStyle(fontWeight: FontWeight.bold, height: 1.5),
             ),
             subtitle: Text(

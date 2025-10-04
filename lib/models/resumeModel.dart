@@ -1,17 +1,17 @@
 class ResumeModel {
-  int id;
-  String candidate;
-  String title;
-  bool isDefault;
-  bool isVerified;
+  int? id;
+  String? candidate;
+  String? title;
+  bool? isDefault;
+  bool? isVerified;
   dynamic interests;
   dynamic achievements;
-  String computerLanguages;
-  String softwarePackages;
-  String additionalCourses;
-  String minorCourses;
-  String languages;
-  String resumeUrl;
+  String? computerLanguages;
+  String? softwarePackages;
+  String? additionalCourses;
+  String? minorCourses;
+  String? languages;
+  String? resumeUrl;
 
   ResumeModel({
     this.id,

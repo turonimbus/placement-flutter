@@ -2,19 +2,19 @@ import 'package:placement/models/RoundSetModel.dart';
 import 'package:placement/models/applicationModel.dart';
 
 class ProfilesModel {
-  final int profileId;
-  final String name;
-  final int companyId;
-  final String companyName;
-  final String companySector;
-  final String companyEmail;
-  final String companyDescription;
-  final String website;
-  final String applicationDeadline;
-  final String status;
-  final bool requiresCoverLetter;
+  final int? profileId;
+  final String? name;
+  final int? companyId;
+  final String? companyName;
+  final String? companySector;
+  final String? companyEmail;
+  final String? companyDescription;
+  final String? website;
+  final String? applicationDeadline;
+  final String? status;
+  final bool? requiresCoverLetter;
   final application;
-  final List<RoundSetModel> roundSet;
+  final List<RoundSetModel>? roundSet;
 
   ProfilesModel({
     this.profileId,

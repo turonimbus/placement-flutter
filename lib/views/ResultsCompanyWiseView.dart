@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:placement/resources/R.dart';
-import 'package:placement/shared/loadingPage.dart';
-import 'package:placement/viewmodels/ResultsCompanyWiseViewModel.dart';
-import 'package:placement/views/baseView.dart';
+
+import '../resources/R.dart';
+import '../shared/loadingPage.dart';
+import '../viewmodels/ResultsCompanyWiseViewModel.dart';
+import 'baseView.dart';
 
 class ResultsCompanyWiseView extends StatelessWidget {
   final int yearSelector, internSwitch, sortSwitch;
-  const ResultsCompanyWiseView(
-      {Key key, this.yearSelector, this.internSwitch, this.sortSwitch})
-      : super(key: key);
+  const ResultsCompanyWiseView({
+    super.key, 
+    required this.yearSelector,
+    required this.internSwitch,
+    required this.sortSwitch
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +34,7 @@ class ResultsCompanyWiseView extends StatelessWidget {
         ? Center(
             child: LoadingPage(),
           )
-        : (model.companyResults == null)
+        : (model.companyResults.isEmpty)
             ? Center(
                 child: Text("No Results Found"),
               )

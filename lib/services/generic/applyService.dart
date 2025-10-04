@@ -12,13 +12,14 @@ class ApplyService {
   final RequestService _requestService = locator<RequestService>();
   final GlobalCache _cache = locator<GlobalCache>();
 
-  Future<DetailCompanyProfileModel> fetchCompanyDetails(int profileId) async {
+  Future<DetailCompanyProfileModel?> fetchCompanyDetails(int profileId) async {
     var _data = await _requestService.makeGetRequest(
       EndPoints.HOST + EndPoints.PROFILES_ALL + profileId.toString() + '/'
     );
     if(_data != -1 && _data != -2) {
       return DetailCompanyProfileModel.fromJson(_data);
     }
+    return null;
   }
 
   Future<List<ProfilesModel>> fetchProfileForMe() async {
@@ -36,7 +37,7 @@ class ApplyService {
         }
       }
     }
-    return _cache.profilesForMe;
+    return _cache.profilesForMe ?? [];
   }
 
   Future<CandidateModel> getCandidateProfile() async {
@@ -57,7 +58,7 @@ class ApplyService {
         _cache.candidateData = candidate;
       }
     }
-    return _cache.candidateData;
+    return _cache.candidateData ?? CandidateModel();
   }
 
   Future<List<ProfilesModel>> fetchProfileForAll() async {
@@ -75,7 +76,7 @@ class ApplyService {
         }
       }
     }
-    return _cache.profilesOpenForAll;
+    return _cache.profilesOpenForAll ?? [];
   }
 
   Future<List<ProfilesModel>> fetchProfileApplied() async {

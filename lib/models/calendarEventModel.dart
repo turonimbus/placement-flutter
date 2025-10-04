@@ -1,14 +1,14 @@
 class CalendarEventModel {
   final String title,
     description,
-    dateTime,
-    color;
+    dateTime;
+  final String? color;
   
   CalendarEventModel({
     this.color,
-    this.dateTime,
-    this.description,
-    this.title
+    required this.dateTime,
+    required this.description,
+    required this.title
   });
 
   factory CalendarEventModel.fromJson(Map<String, dynamic> json) {

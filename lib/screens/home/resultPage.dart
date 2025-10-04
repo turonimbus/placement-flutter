@@ -6,17 +6,17 @@ import 'package:placement/screens/home/screen_for_results/resultsCompanyWise.dar
 
 class ResultPage extends StatefulWidget {
   final Map<String, dynamic> args;
-  const ResultPage({Key key, this.args}) : super(key: key);
+  const ResultPage({super.key, required this.args});
   @override
   _ResultPageState createState() => _ResultPageState();
 }
 
 class _ResultPageState extends State<ResultPage>
     with SingleTickerProviderStateMixin {
-  TabController _tabController;
-  ScrollController _scrollController;
-  int _yearSelectionVariable;
-  int _resultTypeVariable;
+  late TabController _tabController;
+  late ScrollController _scrollController;
+  late int _yearSelectionVariable;
+  late int _resultTypeVariable;
 
   @override
   void initState() {
@@ -45,8 +45,8 @@ class _ResultPageState extends State<ResultPage>
 
   @override
   Widget build(BuildContext context) {
-    final double _width = MediaQuery.of(context).size.width;
-    final double _height = MediaQuery.of(context).size.height;
+    // final double _width = MediaQuery.of(context).size.width;
+    // final double _height = MediaQuery.of(context).size.height;
     return Stack(
       children: <Widget>[
         _resultsView(context),
@@ -55,6 +55,7 @@ class _ResultPageState extends State<ResultPage>
           child: Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 10, 10),
             child: FloatingActionButton(
+              foregroundColor: Colors.white,
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
@@ -89,6 +90,8 @@ class _ResultPageState extends State<ResultPage>
         return <Widget>[
           SliverAppBar(
             title: Text(Strings.PLACEMENT_YEAR),
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.black,
             centerTitle: true,
             pinned: true,
             floating: true,
@@ -108,7 +111,7 @@ class _ResultPageState extends State<ResultPage>
     );
   }
 
-  Widget _resultsListPage(BuildContext context) {
+  PreferredSizeWidget _resultsListPage(BuildContext context) {
     return TabBar(
       controller: _tabController,
       tabs: _profileTabs,

@@ -2,18 +2,18 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:placement/enums/ViewStateEnum.dart';
-import 'package:placement/models/calendarEventModel.dart';
-import 'package:placement/resources/R.dart';
-import 'package:placement/shared/hexColor.dart';
-import 'package:placement/shared/loadingPage.dart';
-import 'package:placement/viewmodels/CalendarViewModel.dart';
-import 'package:placement/views/baseView.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import './baseView.dart';
+import '../resources/R.dart';
+import '../shared/hexColor.dart';
+import '../shared/loadingPage.dart';
+import '../viewmodels/CalendarViewModel.dart';
+import '../models/calendarEventModel.dart';
+
 class CalendarView extends StatefulWidget {
-  final Map<String, dynamic> args;
-  const CalendarView({Key key, this.args}) : super(key: key);
+  final Map<String, dynamic>? args;
+  const CalendarView({super.key, this.args});
 
   @override
   State<CalendarView> createState() => _CalendarViewState();
@@ -21,7 +21,7 @@ class CalendarView extends StatefulWidget {
 
 class _CalendarViewState extends State<CalendarView> {
   DateTime _focusedDay = DateTime.now();
-  DateTime _selectedDay;
+  DateTime? _selectedDay;
 
   int getHashCode(DateTime key) {
     return key.day * 1000000 + key.month * 10000 + key.year;
@@ -30,7 +30,7 @@ class _CalendarViewState extends State<CalendarView> {
   @override
   Widget build(BuildContext context) {
     final double _width = MediaQuery.of(context).size.width;
-    final double _height = MediaQuery.of(context).size.height;
+    // final double _height = MediaQuery.of(context).size.height;
 
     return BaseView<CalendarViewModel>(
       onModelReady: (model) {
@@ -81,7 +81,7 @@ class _CalendarViewState extends State<CalendarView> {
               formatButtonShowsNext: false,
             ),
             eventLoader: (day) {
-              return events[day];
+              return events[day] ?? [];
             },
             selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
             onDaySelected: (selectedDay, focusedDay) {
@@ -151,8 +151,8 @@ class _CalendarViewState extends State<CalendarView> {
       itemBuilder: (context, index) {
         CalendarEventModel item = model.displayEvents[index];
         DateTime dateObject = DateTime.parse(item.dateTime);
-        var date = Jiffy(dateObject);
-        String col = model.displayEvents[index].color;
+        var date = Jiffy.parseFromDateTime(dateObject).toLocal();
+        String? col = model.displayEvents[index].color;
         return Card(
           margin: EdgeInsets.only(bottom: 1),
           elevation: 0.3,

@@ -10,13 +10,13 @@ class ResultsCompanyWiseViewModel extends BaseViewModel {
   ResultService _resultService = locator<ResultService>();
   GlobalCache _cache = locator<GlobalCache>();
   List<CompanyConciseModel> _companyResults = [];
-  int _yearIndex, _internSwitch, _sortSwitch;
+  int? _yearIndex, _internSwitch, _sortSwitch;
   bool _isDisposed = false;
 
   List<CompanyConciseModel> get companyResults => _companyResults;
-  int get yearIndex => _yearIndex;
-  int get internSwitch => _internSwitch;
-  int get sortSwitch => _sortSwitch;
+  int? get yearIndex => _yearIndex;
+  int? get internSwitch => _internSwitch;
+  int? get sortSwitch => _sortSwitch;
   @override
   void dispose() { 
     _isDisposed = true;
@@ -40,7 +40,7 @@ class ResultsCompanyWiseViewModel extends BaseViewModel {
   }
 
   Future<void> _populateResults() async {
-    _companyResults = await _resultService.companyWiseResults(_yearIndex, _internSwitch);
+    _companyResults = (await _resultService.companyWiseResults(_yearIndex!, _internSwitch!))!;
     if(_sortSwitch == 1) _companyResults.sort(
       (a,b) => a.companyName.compareTo(b.companyName)
     );

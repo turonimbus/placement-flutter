@@ -1,20 +1,20 @@
-import 'package:placement/models/BranchRequirementModel.dart';
+import 'BranchRequirementModel.dart';
 
 class CandidateModel {
-  int candidateId;
-  String candidateName;
-  int departmentId;
-  String departmentCode;
-  int degreeId;
-  String degreeName;
-  String displayPicture;
-  String season;
-  int creditsPoolA;
-  int creditsPoolB;
-  String departmentName;
-  int currentYear;
-  String internshipStatus;
-  BranchRequirementModel branch;
+  int? candidateId;
+  String? candidateName;
+  int? departmentId;
+  String? departmentCode;
+  int? degreeId;
+  String? degreeName;
+  String? displayPicture;
+  String? season;
+  int? creditsPoolA;
+  int? creditsPoolB;
+  String? departmentName;
+  int? currentYear;
+  String? internshipStatus;
+  BranchRequirementModel? branch;
 
   CandidateModel({
     this.candidateId,

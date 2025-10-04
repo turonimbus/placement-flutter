@@ -1,8 +1,10 @@
-import 'package:placement/locator.dart';
-import 'package:placement/models/resumeModel.dart';
-import 'package:placement/services/generic/applyService.dart';
-import 'package:placement/viewmodels/BaseViewModel.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
+import '../locator.dart';
+import '../models/placement_exception.dart';
+import '../models/resumeModel.dart';
+import '../services/generic/applyService.dart';
+import 'BaseViewModel.dart';
 
 class ResumeListViewModel extends BaseViewModel {
   List<ResumeModel> _resumes = [];
@@ -17,11 +19,11 @@ class ResumeListViewModel extends BaseViewModel {
     setIdle();
   }
 
-  void launchURL(String url) async {
+  Future<void> launchURL(String url) async {
     if (await canLaunchUrlString(url)) {
       await launchUrlString(url);
     } else {
-      throw 'Could not launch $url';
+      throw PlacementException('Could not launch $url');
     }
   }
 }

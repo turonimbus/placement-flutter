@@ -1,6 +1,6 @@
 class CompanyDetailModel {
-  int id;
-  String sector,
+  int? id;
+  String? sector,
     name,
     email,
     website,

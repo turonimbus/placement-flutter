@@ -4,9 +4,9 @@ class CompanyConciseModel {
   final String detail;
 
   CompanyConciseModel({
-    this.companyName,
-    this.selected,
-    this.detail
+    required this.companyName,
+    required this.selected,
+    required this.detail
   });
 
   factory CompanyConciseModel.fromJson(Map<String, dynamic> _json) {

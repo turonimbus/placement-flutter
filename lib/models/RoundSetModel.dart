@@ -1,7 +1,7 @@
 
 class RoundSetModel {
-  final int id, profile, index;
-  final String  name, date, time;
+  final int? id, profile, index;
+  final String?  name, date, time;
 
   RoundSetModel({
     this.date,

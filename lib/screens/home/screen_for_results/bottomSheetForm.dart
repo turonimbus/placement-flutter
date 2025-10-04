@@ -6,29 +6,28 @@ import 'package:placement/shared/GlobalCache.dart';
 
 class BottomSheetForm extends StatefulWidget {
   BottomSheetForm(
-      {Key key,
-      this.yearSelectionVariable,
-      this.resultTypeVariable,
+      {super.key,
+      required this.yearSelectionVariable,
+      required this.resultTypeVariable,
       this.sortVariable,
       this.valueChangedForYear,
       this.valueChangedForResult,
-      this.valueChangedForSort})
-      : super(key: key);
+      this.valueChangedForSort});
   final int yearSelectionVariable;
   final int resultTypeVariable;
-  final int sortVariable;
-  final valueChangedForYear;
-  final valueChangedForResult;
-  final valueChangedForSort;
+  late int? sortVariable;
+  final Function? valueChangedForYear;
+  final Function? valueChangedForResult;
+  final Function? valueChangedForSort;
 
   @override
   _BottomSheetFormState createState() => _BottomSheetFormState();
 }
 
 class _BottomSheetFormState extends State<BottomSheetForm> {
-  int yearSelectionVariable;
-  int resultTypeVariable;
-  int sortVariable;
+  late int yearSelectionVariable;
+  late int resultTypeVariable;
+  late int? sortVariable;
   GlobalCache _cache = locator<GlobalCache>();
 
   @override
@@ -102,7 +101,7 @@ class _BottomSheetFormState extends State<BottomSheetForm> {
               return RadioListTile(
                 groupValue: yearSelectionVariable,
                 value: year.key,
-                title: Text(year.value),
+                title: Text(year.value!),
                 onChanged: (val) {
                   _setYear(val);
                 },
@@ -134,7 +133,7 @@ class _BottomSheetFormState extends State<BottomSheetForm> {
               return RadioListTile(
                 groupValue: sortVariable,
                 value: resultType.key,
-                title: Text(resultType.value),
+                title: Text(resultType.value!),
                 onChanged: (val) {
                   _setSortVar(val);
                 },
@@ -166,7 +165,7 @@ class _BottomSheetFormState extends State<BottomSheetForm> {
               return RadioListTile(
                 groupValue: resultTypeVariable,
                 value: resultType.key,
-                title: Text(resultType.value),
+                title: Text(resultType.value!),
                 onChanged: (val) {
                   _setResultType(val);
                 },

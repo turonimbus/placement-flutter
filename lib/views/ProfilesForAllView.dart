@@ -7,7 +7,7 @@ import 'package:placement/viewmodels/ProfilesForMeViewModel.dart';
 import 'package:placement/views/baseView.dart';
 
 class ProfilesForAllView extends StatelessWidget {
-  const ProfilesForAllView({Key key}) : super(key: key);
+  const ProfilesForAllView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +47,9 @@ class ProfilesForAllView extends StatelessWidget {
               elevation: 0.3,
               child: ListTile(
                 title: Text(
-                  model.profiles[index].companyName +
+                  model.profiles[index].companyName! +
                       "(" +
-                      model.profiles[index].name +
+                      model.profiles[index].name! +
                       ")",
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -72,7 +72,7 @@ class ProfilesForAllView extends StatelessWidget {
                 trailing: ProfileStatusIcon(
                   model: model,
                   profile: model.profiles[index],
-                  status: model.profiles[index].status,
+                  status: model.profiles[index].status!,
                 ),
               ));
         },

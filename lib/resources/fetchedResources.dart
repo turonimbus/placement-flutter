@@ -1,71 +1,62 @@
 class FetchedResources {
+  FetchedResources._internal();
 
-  static final FetchedResources _fetchedResources = FetchedResources.internal();
-  factory FetchedResources() => _fetchedResources;
+  static final _instance = FetchedResources._internal();
+  factory FetchedResources() => _instance;
 
-  Map<String, dynamic> _resultsBranchWise;
-  get resultsBranchWise => _resultsBranchWise;
+  final Map<String, dynamic> _resultsBranchWise = {
+    'initialised': false,
+    'data': null
+  };
+  Map<String, dynamic> get resultsBranchWise => _resultsBranchWise;
 
-  Map<String, dynamic> _resultsCompanyWise;
-  get resultsCompanyWise => _resultsCompanyWise;
+  final Map<String, dynamic> _resultsCompanyWise = {
+    'initialised': false,
+    'data': null
+  };
+  Map<String, dynamic> get resultsCompanyWise => _resultsCompanyWise;
 
-  Map<String, dynamic> _applyForAll;
-  get applyForAll => _applyForAll;
+  final Map<String, dynamic> _applyForAll = {
+    'initialised': false,
+    'data': null
+  };
+  Map<String, dynamic> get applyForAll => _applyForAll;
 
-  Map<String, dynamic> _applyForMe;
-  get applyForMe => _applyForMe;
+  final Map<String, dynamic> _applyForMe = {
+    'initialised': false,
+    'data': null
+  };
+  Map<String, dynamic> get applyForMe => _applyForMe;
 
-  Map<String, dynamic> _candidateProfile;
-  get candidateProfile => _candidateProfile;
-  
-  FetchedResources.internal() {
-    initState();
-  }
 
-  void initState() {
-    _resultsBranchWise = {
-      'initialised' : false,
-      'data' : null
-    };
-    _resultsCompanyWise = {
-      'initialised' : false,
-      'data' : null
-    };
-    _applyForMe = {
-      'initialised' : false,
-      'data' : null
-    };
-    _applyForAll = {
-      'initialised' : false,
-      'data' : null
-    };
-    _candidateProfile = {
-      'initialised' : false,
-      'data' : null
-    };
-  }
 
-  void setResultsBranchWise(results) {
+  final Map<String, dynamic> _candidateProfile = {
+    'initialised': false,
+    'data': null
+  };
+  Map<String, dynamic> get candidateProfile => _candidateProfile;
+
+  void setResultsBranchWise(dynamic results) {
     _resultsBranchWise['initialised'] = true;
     _resultsBranchWise['data'] = results;
   }
 
-  void setResultsCompanyWise(results) {
+  void setResultsCompanyWise(dynamic results) {
     _resultsCompanyWise['initialised'] = true;
     _resultsCompanyWise['data'] = results;
   }
 
-  void setApplyForMe(results) {
+  void setApplyForMe(dynamic results) {
     _applyForMe['initialised'] = true;
     _applyForMe['data'] = results;
   }
 
-  void setApplyForAll(results) {
+  void setApplyForAll(dynamic results) {
     _applyForAll['initialised'] = true;
     _applyForAll['data'] = results;
   }
 
-  void setCandidateProfile(results) {
+  void setCandidateProfile(dynamic results) {
     _candidateProfile['initialised'] = true;
     _candidateProfile['data'] = results;
   }

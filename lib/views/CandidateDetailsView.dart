@@ -8,7 +8,7 @@ import 'package:placement/viewmodels/CandidateDetailsViewModel.dart';
 import 'package:placement/views/baseView.dart';
 
 class CandidateDetailsView extends StatelessWidget {
-  const CandidateDetailsView({Key key}) : super(key: key);
+  const CandidateDetailsView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -108,8 +108,8 @@ class CandidateDetailsView extends StatelessWidget {
               "FAQs",
               style: TextStyle(color: R.textColPrimary),
             ),
-            onTap: () {
-              model.launchURL(Strings.FAQ_LINK);
+            onTap: () async {
+              await model.launchURL(Strings.FAQ_LINK);
             },
           ),
           _divider(),

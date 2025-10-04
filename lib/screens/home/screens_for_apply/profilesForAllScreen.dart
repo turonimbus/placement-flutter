@@ -11,7 +11,7 @@ import 'package:placement/services/api_models/fetchService.dart';
 import 'package:placement/shared/loadingPage.dart';
 
 class ProfilesForAllPage extends StatefulWidget {
-  ProfilesForAllPage({Key key}) : super(key: key);
+  ProfilesForAllPage({super.key});
 
   @override
   _ProfilesForAllPageState createState() => _ProfilesForAllPageState();
@@ -48,7 +48,7 @@ class _ProfilesForAllPageState extends State<ProfilesForAllPage> {
             itemBuilder: (BuildContext context, int index) {
               String _date = snapshot.data[index].applicationDeadline != null
                   ? "Apply before " +
-                      Jiffy(snapshot.data[index].applicationDeadline.toString())
+                      Jiffy.parse(snapshot.data[index].applicationDeadline.toString()).toLocal()
                           .yMMMd
                   : 'Open';
               return Card(

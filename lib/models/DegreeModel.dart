@@ -1,6 +1,6 @@
 class DegreeModel {
-  int id;
-  String code,
+  int? id;
+  String? code,
     name,
     graduation;
   

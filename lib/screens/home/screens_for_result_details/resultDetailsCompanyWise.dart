@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:placement/models/companyWiseStudentModel.dart';
-import 'package:placement/resources/endpoints.dart';
-import 'package:placement/services/api_models/fetchService.dart';
-import 'package:placement/shared/loadingPage.dart';
+
+import '../../../models/companyWiseStudentModel.dart';
+import '../../../resources/endpoints.dart';
+import '../../../services/api_models/fetchService.dart';
+import '../../../shared/loadingPage.dart';
 
 class ResultDetailsCompanyWise extends StatefulWidget {
-  final Map<String, dynamic> args;
-  ResultDetailsCompanyWise({Key key, this.args}) : super(key: key);
+  final dynamic args;
+  ResultDetailsCompanyWise({super.key, required this.args});
 
   @override
   _ResultDetailsCompanyWiseState createState() =>
@@ -16,11 +17,11 @@ class ResultDetailsCompanyWise extends StatefulWidget {
 class _ResultDetailsCompanyWiseState extends State<ResultDetailsCompanyWise>
     with SingleTickerProviderStateMixin {
   var _fetch;
-  List<CompantWiseStudentModel> _results;
-  List<CompantWiseStudentModel> _resultsBackup;
-  AnimationController animationController;
-  Animation<double> animation;
-  OverlayEntry overlayEntry;
+  List<CompantWiseStudentModel> _results = [];
+  List<CompantWiseStudentModel> _resultsBackup = [];
+  late AnimationController animationController;
+  late Animation<double> animation;
+  OverlayEntry? overlayEntry;
 
   @override
   void initState() {
@@ -41,11 +42,11 @@ class _ResultDetailsCompanyWiseState extends State<ResultDetailsCompanyWise>
       onWillPop: () async {
         if (overlayEntry == null) {
           return true;
-        } else if (overlayEntry.mounted) {
+        } else if (overlayEntry!.mounted) {
           await Future.delayed(Duration(milliseconds: 10)).whenComplete(
             () => animationController.reverse(),
           );
-          overlayEntry.remove();
+          overlayEntry!.remove();
           return false;
         } else {
           return true;
@@ -91,7 +92,7 @@ class _ResultDetailsCompanyWiseState extends State<ResultDetailsCompanyWise>
                         .whenComplete(
                       () => animationController.reverse(),
                     );
-                    overlayEntry.remove();
+                    overlayEntry!.remove();
                   },
                 ),
                 title: TextField(
@@ -119,7 +120,7 @@ class _ResultDetailsCompanyWiseState extends State<ResultDetailsCompanyWise>
       overlayState.setState(() {});
     });
     // inserting overlay entry
-    overlayState.insert(overlayEntry);
+    overlayState.insert(overlayEntry!);
     animationController.forward();
   }
 
@@ -173,19 +174,21 @@ class _ResultDetailsCompanyWiseState extends State<ResultDetailsCompanyWise>
   }
 
   void _companyResultsFiltered(String keyword) {
+    final lowerCaseKeyword = keyword.toLowerCase();
     setState(() {
       if (keyword == "") {
         _results = _resultsBackup;
       } else {
         _results = _resultsBackup
-            .where((element) => element.studentName.contains(keyword))
-            .toList();
+          .where((element) =>
+              element.studentName.toLowerCase().contains(lowerCaseKeyword))
+          .toList();
       }
     });
   }
 
   Future<String> _futureOfResults(BuildContext context) async {
-    if (_results != null && _results.length >= 0) return "Success!";
+    if (_resultsBackup.isNotEmpty) return "Success!";
 
     List<CompantWiseStudentModel> _studentResults = [];
     var _data = await _fetch
@@ -196,8 +199,10 @@ class _ResultDetailsCompanyWiseState extends State<ResultDetailsCompanyWise>
     if (widget.args['sort'] == 1) {
       _studentResults.sort((a, b) => a.studentName.compareTo(b.studentName));
     }
-    _results = _studentResults;
-    _resultsBackup = _results;
+    setState(() {
+      _results = _studentResults;
+      _resultsBackup = _results;
+    });
 
     return "Success!";
   }

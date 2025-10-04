@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 import 'package:placement/locator.dart';
@@ -9,16 +10,15 @@ import 'package:placement/resources/endpoints.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:placement/resources/strings.dart';
-import 'package:placement/services/api_models/fetchService.dart';
 import 'package:placement/shared/GlobalCache.dart';
 
 class AuthService {
-  FetchService _fetchService;
-  static final AuthService _auth = AuthService.internal();
+  // FetchService _fetchService;
+  static final AuthService _auth = AuthService._internal();
 
   factory AuthService() => _auth;
 
-  AuthService.internal() {
+  AuthService._internal() {
     initState();
   }
 
@@ -32,7 +32,7 @@ class AuthService {
     try {
       var res = await http.post(Uri.parse(EndPoints.HOST + EndPoints.LOGIN),
           body: data);
-      print("GOT CODE FOR LOGIN ${res.statusCode}");
+      log("GOT CODE FOR LOGIN ${res.statusCode}");
       if (res.statusCode == 200) {
         jsonData = json.decode(res.body);
         await _encrypt(jsonData["access"], jsonData["refresh"]);
@@ -47,7 +47,7 @@ class AuthService {
 
   Future<void> refreshToken() async {
     var _jsonData;
-    String _refresh = _box.get('refresh');
+    String? _refresh = _box.get('refresh');
     try {
       var _res = await http.post(
         Uri.parse(EndPoints.HOST + EndPoints.REFRESH),
@@ -91,11 +91,11 @@ class AuthService {
     _box.put('access', access);
   }
 
-  _openEncryptedBox() async {
-    print("initialising box");
+  Future<void> _openEncryptedBox() async {
+    log("initialising box");
     await Hive.initFlutter();
     await Hive.openBox(Strings.AUTH_BOX);
     _box = Hive.box(Strings.AUTH_BOX);
-    refreshToken();
+    await refreshToken();
   }
 }

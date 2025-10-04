@@ -1,6 +1,6 @@
 class DepartmentModel {
-  int id;
-  String code,
+  int? id;
+  String? code,
     name;
 
   DepartmentModel({

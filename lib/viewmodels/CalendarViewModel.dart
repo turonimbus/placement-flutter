@@ -1,9 +1,9 @@
-import 'package:placement/enums/ViewStateEnum.dart';
+import 'dart:developer';
+
 import 'package:placement/locator.dart';
 import 'package:placement/models/calendarEventModel.dart';
 import 'package:placement/services/generic/calendarService.dart';
 import 'package:placement/viewmodels/BaseViewModel.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 class CalendarViewModel extends BaseViewModel {
   // CalendarController _calendarController = CalendarController();
@@ -11,12 +11,12 @@ class CalendarViewModel extends BaseViewModel {
   List<CalendarEventModel> _upcomingEvents = [];
   List<CalendarEventModel> _selectedEvents = [];
   CalendarService _calendarService = locator<CalendarService>();
-  Map<DateTime, List<CalendarEventModel>> _eventMap = {};
+  Map<DateTime, List<CalendarEventModel>?> _eventMap = {};
   bool _displayUpcoming = true;
   bool _isDisposed = false;
 
   // CalendarController get calendarController => _calendarController;
-  Map<DateTime, List<CalendarEventModel>> get eventMap => _eventMap;
+  Map<DateTime, List<CalendarEventModel>?> get eventMap => _eventMap;
   List<CalendarEventModel> get displayEvents => (_displayUpcoming)
       ? _upcomingEvents
       : _sortedCalendarModel(_selectedEvents);
@@ -56,21 +56,19 @@ class CalendarViewModel extends BaseViewModel {
           continue;
         }
         DateTime createDay = DateTime(eveDay.year, eveDay.month, eveDay.day);
-        if (_eventMap[createDay] != null) {
-          _eventMap[createDay].add(item);
-        } else {
-          _eventMap[createDay] = [item];
-        }
+        
+        _eventMap.putIfAbsent(createDay, () => [])!.add(item);
+        
         if (today.isBefore(eveDay)) _upcomingEvents.add(item);
       }
       _upcomingEvents = _sortedCalendarModel(_upcomingEvents);
-      print("UPCOMING! ${_upcomingEvents.length}");
+      log("UPCOMING! ${_upcomingEvents.length}");
     }
     setIdle();
   }
 
-  void onSelect(List<dynamic> _seEvents) {
-    if (_seEvents != null && _seEvents.length > 0) {
+  void onSelect(List<CalendarEventModel>? _seEvents) {
+    if (_seEvents != null && _seEvents.isNotEmpty) {
       _selectedEvents = _seEvents;
       _displayUpcoming = false;
     } else {

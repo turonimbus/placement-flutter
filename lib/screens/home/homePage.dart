@@ -1,19 +1,14 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:placement/resources/R.dart';
-import 'package:placement/resources/strings.dart';
 import 'package:placement/screens/home/applyPage.dart';
-import 'package:placement/screens/home/calendarPage.dart';
-import 'package:placement/screens/home/candidatePage.dart';
-import 'package:placement/screens/home/resultPage.dart';
 import 'package:placement/services/auth/auth_service.dart';
 import 'package:placement/views/CandidateDetailsView.dart';
 import 'package:placement/views/ResultPageView.dart';
 import 'package:placement/views/calendarView.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key}) : super(key: key);
+  HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -21,9 +16,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
-  TabController _tabController;
-  bool _isCollapsed = true;
-  AuthService _auth;
+  late TabController _tabController;
+  // bool _isCollapsed = true;
+  late AuthService _auth;
 
   final List<Tab> _bottomTab = <Tab>[
     Tab(
@@ -57,15 +52,15 @@ class _HomePageState extends State<HomePage>
     super.dispose();
   }
 
-  void _onHorizontalDrag(DragEndDetails details) {
-    if (details.primaryVelocity == 0)
-      return; // user have just tapped on screen (no dragging)
+  // void _onHorizontalDrag(DragEndDetails details) {
+  //   if (details.primaryVelocity == 0)
+  //     return; // user have just tapped on screen (no dragging)
 
-    if (details.primaryVelocity.compareTo(0) == -1)
-      setState(() {
-        _isCollapsed = true;
-      });
-  }
+  //   if (details.primaryVelocity!.compareTo(0) == -1)
+  //     setState(() {
+  //       _isCollapsed = true;
+  //     });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -198,28 +193,36 @@ class _HomePageState extends State<HomePage>
   }
 
   Widget _homePageScaffold(BuildContext context) {
-    return Scaffold(
-        body: TabBarView(
-          controller: _tabController,
-          children: _tabSelector(),
-        ),
-        bottomNavigationBar: Container(
-            decoration: BoxDecoration(color: Colors.white, boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.3),
-                blurRadius: 10.0,
-                spreadRadius: 2.0,
-                offset: Offset(0, -5),
+    return Container(
+      color: R.primaryCol,
+      child: SafeArea(
+        left: false,
+        right: false,
+        child:Scaffold(
+              body: TabBarView(
+                controller: _tabController,
+                children: _tabSelector(),
               ),
-            ]),
-            child: TabBar(
-              controller: _tabController,
-              tabs: _bottomTab,
-              indicatorPadding: EdgeInsets.all(5.0),
-              indicatorColor: R.primaryCol,
-              labelColor: R.primaryCol,
-              unselectedLabelColor: Colors.grey,
-            )));
+              bottomNavigationBar: Container(
+                  decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade300,
+                      blurRadius: 10.0,
+                      spreadRadius: 2.0,
+                      offset: Offset(0, -5),
+                    ),
+                  ]),
+                  child: TabBar(
+                    controller: _tabController,
+                    tabs: _bottomTab,
+                    indicatorPadding: EdgeInsets.all(5.0),
+                    indicatorColor: R.primaryCol,
+                    labelColor: R.primaryCol,
+                    unselectedLabelColor: Colors.grey,
+                  ))),
+        ),
+    )
+    ;
   }
 
   List<Widget> _tabSelector() {
