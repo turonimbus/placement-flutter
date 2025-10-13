@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:placement/screens/home/screens_for_apply/bottomModalApplySheet.dart';
-import 'package:placement/shared/loadingPage.dart';
-import 'package:placement/viewmodels/CompanyDetailViewModel.dart';
-import 'package:placement/views/baseView.dart';
+
+import '../resources/R.dart';
+import '../screens/home/screens_for_apply/bottomModalApplySheet.dart';
+import '../shared/loadingPage.dart';
+import '../viewmodels/CompanyDetailViewModel.dart';
+import 'baseView.dart';
 
 class CompanyDetailView extends StatelessWidget {
   final dynamic args;
@@ -24,55 +26,62 @@ class CompanyDetailView extends StatelessWidget {
 
   Widget _companyDetailScaffold(
       BuildContext context, CompanyDetailViewModel model, double _width) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Profile Details"),
-      ),
-      body: (model.isLoading)
-          ? Center(
-              child: LoadingPage(),
-            )
-          : Container(
-              constraints: BoxConstraints.expand(),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 30,
+    return ColoredBox(
+      color: R.primaryCol,
+      child: SafeArea(
+        left: false,
+        right: false,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text("Profile Details"),
+          ),
+          body: (model.isLoading)
+              ? Center(
+                  child: LoadingPage(),
+                )
+              : ConstrainedBox(
+                  constraints: BoxConstraints.expand(),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        _header(context, model, _width),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        _applyButton(context, model, _width),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        _description(context, model, _width),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        _eligibleBranches(context, model, _width),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        _profileDetail(context, model, _width),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        _packageDetail(context, model, _width),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        _roundSet(context, model, _width),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                      ],
                     ),
-                    _header(context, model, _width),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _applyButton(context, model, _width),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    _description(context, model, _width),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _eligibleBranches(context, model, _width),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _profileDetail(context, model, _width),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _packageDetail(context, model, _width),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _roundSet(context, model, _width),
-                    SizedBox(
-                      height: 20,
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
+        ),
+      ),
     );
   }
 
@@ -80,15 +89,15 @@ class CompanyDetailView extends StatelessWidget {
       BuildContext context, CompanyDetailViewModel model, double _width) {
     int inx = 0;
     return (model.companyProfile!.roundSet!.length == 0)
-        ? Container()
-        : Container(
+        ? const SizedBox.shrink()
+        : SizedBox(
             width: _width * 0.9,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 _sectionHeading("Process Details"),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 Column(
@@ -109,7 +118,7 @@ class CompanyDetailView extends StatelessWidget {
   Widget _packageDetail(
       BuildContext context, CompanyDetailViewModel model, double _width) {
     return (model.checkOverallPackage())
-        ? Container(
+        ? SizedBox(
             width: _width * 0.9,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -140,20 +149,20 @@ class CompanyDetailView extends StatelessWidget {
               ],
             ),
           )
-        : Container();
+        : const SizedBox.shrink();
   }
 
   Widget _profileDetail(
       BuildContext context, CompanyDetailViewModel model, double _width) {
     print("REBUILD!! + ${model.companyProfile!.packageDescription.toString()}");
-    return Container(
+    return SizedBox(
       width: _width * 0.9,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           _sectionHeading("Profile Details"),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           _rowItem(context, "Profile Name",
@@ -184,7 +193,7 @@ class CompanyDetailView extends StatelessWidget {
           _rowItem(context, "PPT Absence Cost",
               model.companyProfile!.talkAbsenceCost.toString(), false),
           _rowItem(context, "PPT Status",
-              model.formatIt(model.companyProfile!.talkStatus!), true),
+              model.formatIt(model.companyProfile!.talkStatus), true),
           _rowItem(
               context,
               "Application Deadline",
@@ -264,7 +273,7 @@ class CompanyDetailView extends StatelessWidget {
               ],
             ),
           )
-        : Container();
+        : const SizedBox.shrink();
   }
 
   Widget _eligibleBranches(
@@ -291,7 +300,7 @@ class CompanyDetailView extends StatelessWidget {
                   child: Text(
                     val.name!,
                     overflow: TextOverflow.clip,
-                    style: TextStyle(color: Color(0xFF666666)),
+                    style: const TextStyle(color: Color(0xFF666666)),
                   ),
                 ))
             .toList(),
@@ -301,7 +310,7 @@ class CompanyDetailView extends StatelessWidget {
 
   Widget _description(
       BuildContext context, CompanyDetailViewModel model, double _width) {
-    return Container(
+    return SizedBox(
       width: _width * 0.9,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -319,7 +328,7 @@ class CompanyDetailView extends StatelessWidget {
 
   Widget _header(
       BuildContext context, CompanyDetailViewModel model, double _width) {
-    return Container(
+    return SizedBox(
       width: _width * 0.9,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -336,7 +345,7 @@ class CompanyDetailView extends StatelessWidget {
             model.companyProfile!.company!.sector!,
             style: TextStyle(color: Color(0xFF666666)),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Text(
@@ -349,7 +358,7 @@ class CompanyDetailView extends StatelessWidget {
   }
 
   Widget _sectionHeading(String heading) {
-    return Container(
+    return Padding(
       padding: EdgeInsets.symmetric(vertical: 10),
       child: Text(
         heading,
@@ -391,7 +400,6 @@ class CompanyDetailView extends StatelessWidget {
                     ));
           },
         );
-        break;
       case 'expired':
         return InkWell(
           child: _buttonContainer(
@@ -420,7 +428,6 @@ class CompanyDetailView extends StatelessWidget {
                     ));
           },
         );
-        break;
       case 'open':
         return InkWell(
           child: _buttonContainer(
@@ -445,7 +452,6 @@ class CompanyDetailView extends StatelessWidget {
             });
           },
         );
-        break;
       case 'withdrawable':
         return InkWell(
           child: _buttonContainer(
@@ -483,7 +489,6 @@ class CompanyDetailView extends StatelessWidget {
                     ));
           },
         );
-        break;
       case 'locked':
         return InkWell(
           child: _buttonContainer(
@@ -511,7 +516,6 @@ class CompanyDetailView extends StatelessWidget {
                     ));
           },
         );
-        break;
       default:
         return Icon(Icons.signal_cellular_connected_no_internet_4_bar);
     }
