@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:placement/models/companyConciseModel.dart';
-import 'package:placement/resources/endpoints.dart';
-import 'package:placement/resources/fetchedResources.dart';
-import 'package:placement/services/api_models/fetchService.dart';
-import 'package:placement/shared/dataProvider.dart';
-import 'package:placement/shared/loadingPage.dart';
 import 'package:provider/provider.dart';
 
+import '../../../models/companyConciseModel.dart';
+import '../../../resources/endpoints.dart';
+import '../../../resources/fetchedResources.dart';
+import '../../../services/api_models/fetchService.dart';
+import '../../../shared/dataProvider.dart';
+import '../../../shared/loadingPage.dart';
+
 class ResultsCompanyWise extends StatefulWidget {
-  bool? resultType;
+  final bool? resultType;
   ResultsCompanyWise({super.key, this.resultType});
 
   @override

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:placement/models/profilesModel.dart';
@@ -33,7 +31,7 @@ class _ProfilesForAllPageState extends State<ProfilesForAllPage> {
 
   @override
   Widget build(BuildContext context) {
-    var _width = MediaQuery.of(context).size.width;
+    // var _width = MediaQuery.of(context).size.width;
     return Container(
       child: FutureBuilder(
         future: _giveList(context),
@@ -106,7 +104,6 @@ class _ProfilesForAllPageState extends State<ProfilesForAllPage> {
             );
           },
         );
-        break;
       case 'expired':
         return IconButton(
           icon: Icon(
@@ -131,7 +128,6 @@ class _ProfilesForAllPageState extends State<ProfilesForAllPage> {
             );
           },
         );
-        break;
       case 'open':
         return IconButton(
           icon: Icon(
@@ -149,7 +145,6 @@ class _ProfilesForAllPageState extends State<ProfilesForAllPage> {
             );
           },
         );
-        break;
       case 'withdrawable':
         return IconButton(
           icon: Icon(
@@ -183,7 +178,6 @@ class _ProfilesForAllPageState extends State<ProfilesForAllPage> {
             );
           },
         );
-        break;
       case 'locked':
         return IconButton(
           icon: Icon(
@@ -208,7 +202,6 @@ class _ProfilesForAllPageState extends State<ProfilesForAllPage> {
             );
           },
         );
-        break;
       default:
         return Icon(Icons.signal_cellular_connected_no_internet_4_bar);
     }

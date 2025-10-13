@@ -52,7 +52,9 @@ class ApplyService {
           EndPoints.HOST + EndPoints.WHOAMI
         );
         if(_profilePic != -1 && _profilePic != -2) {
-          candidate.displayPicture = EndPoints.HOST + _profilePic['displayPicture'].toString();
+          if (_profilePic['displayPicture'] != null){
+            candidate.displayPicture = EndPoints.HOST + _profilePic['displayPicture'].toString();
+          }
         }
         print("CANDI PIC ${candidate.displayPicture}");
         _cache.candidateData = candidate;

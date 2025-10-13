@@ -232,28 +232,28 @@ class CandidateDetailsView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            model.degreeName,
+            model.degreeName ?? "",
             style: TextStyle(color: Colors.black54),
           ),
           SizedBox(
             height: 5,
           ),
           Text(
-            model.departmentName,
+            model.departmentName ?? "",
             style: TextStyle(color: Colors.black54),
           ),
           SizedBox(
             height: 10,
           ),
-          _statusRows("Status: ", model.season + ", " + model.internshipStatus),
+          _statusRows("Status: ", (model.season ?? "") + ", " + (model.internshipStatus ?? "")),
           SizedBox(
             height: 5,
           ),
-          _statusRows("Pool A Credits: ", model.creditsPoolA.toString()),
+          _statusRows("Pool A Credits: ", (model.creditsPoolA ?? 0).toString()),
           SizedBox(
             height: 5,
           ),
-          _statusRows("Pool B Credits: ", model.creditsPoolB.toString()),
+          _statusRows("Pool B Credits: ", (model.creditsPoolB ?? 100).toString()),
         ],
       ),
     );
@@ -277,6 +277,7 @@ class CandidateDetailsView extends StatelessWidget {
   }
 
   Widget _headerAndIcon(BuildContext context, dynamic model, double _width) {
+    final String? displayPicture = model.displayPicture;
     return Container(
       width: _width * 0.9,
       child: Row(
@@ -288,16 +289,17 @@ class CandidateDetailsView extends StatelessWidget {
                 Container(
                   width: 60,
                   height: 60,
-                  decoration: BoxDecoration(
-                      color: Colors.grey[300], shape: BoxShape.circle),
+                  decoration: const BoxDecoration(
+                      color: Color(0xFFE0E0E0), shape: BoxShape.circle),
                   child: Icon(
                     Icons.account_circle,
                     size: 60,
                     color: Theme.of(context).primaryColor,
                   ),
                 ),
+                if (displayPicture != null)
                 CachedNetworkImage(
-                  imageUrl: model.displayPicture,
+                  imageUrl: displayPicture,
                   placeholder: _imagePlaceHolder,
                   imageBuilder: (context, imageProvider) {
                     return CircleAvatar(
@@ -336,7 +338,7 @@ class CandidateDetailsView extends StatelessWidget {
             width: 10,
           ),
           Text(
-            model.candidateName,
+            model.candidateName ?? "",
             style: TextStyle(fontSize: 30),
           ),
         ],

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:placement/models/branchConciseModel.dart';
-import 'package:placement/resources/endpoints.dart';
-import 'package:placement/resources/fetchedResources.dart';
-import 'package:placement/services/api_models/fetchService.dart';
-import 'package:placement/shared/dataProvider.dart';
-import 'package:placement/shared/hexColor.dart';
-import 'package:placement/shared/loadingPage.dart';
 import 'package:provider/provider.dart';
+
+import '../../../models/branchConciseModel.dart';
+import '../../../resources/endpoints.dart';
+import '../../../resources/fetchedResources.dart';
+import '../../../services/api_models/fetchService.dart';
+import '../../../shared/dataProvider.dart';
+import '../../../shared/loadingPage.dart';
 
 class ResultsBranchWise extends StatefulWidget {
   final int? yearSelectionVariable;

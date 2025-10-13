@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:placement/locator.dart';
-import 'package:placement/resources/R.dart';
-import 'package:placement/resources/modelResources.dart';
-import 'package:placement/shared/GlobalCache.dart';
+
+import '../../../resources/R.dart';
+import '../../../resources/modelResources.dart';
 
 class BottomSheetForm extends StatefulWidget {
   BottomSheetForm(
@@ -15,7 +14,7 @@ class BottomSheetForm extends StatefulWidget {
       this.valueChangedForSort});
   final int yearSelectionVariable;
   final int resultTypeVariable;
-  late int? sortVariable;
+  late final int? sortVariable;
   final Function? valueChangedForYear;
   final Function? valueChangedForResult;
   final Function? valueChangedForSort;
@@ -28,7 +27,7 @@ class _BottomSheetFormState extends State<BottomSheetForm> {
   late int yearSelectionVariable;
   late int resultTypeVariable;
   late int? sortVariable;
-  GlobalCache _cache = locator<GlobalCache>();
+  // GlobalCache _cache = locator<GlobalCache>();
 
   @override
   void initState() {

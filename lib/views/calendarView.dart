@@ -21,6 +21,7 @@ class CalendarView extends StatefulWidget {
 
 class _CalendarViewState extends State<CalendarView> {
   DateTime _focusedDay = DateTime.now();
+  CalendarFormat _format = CalendarFormat.month;
   DateTime? _selectedDay;
 
   int getHashCode(DateTime key) {
@@ -96,6 +97,10 @@ class _CalendarViewState extends State<CalendarView> {
             onPageChanged: (focusedDay) {
               _focusedDay = focusedDay;
             },
+            onFormatChanged: (format){
+              setState(() => _format = format);
+            },
+            calendarFormat: _format,
           ),
 
           // TableCalendar(

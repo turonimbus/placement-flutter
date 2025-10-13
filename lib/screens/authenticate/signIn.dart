@@ -169,7 +169,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
           height: 40.0,
           child: TextButton(
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.blue),
+              backgroundColor: WidgetStateProperty.all(Colors.blue),
             ),
             child: Text(
               "Log In",

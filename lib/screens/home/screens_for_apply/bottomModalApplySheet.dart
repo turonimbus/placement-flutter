@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:placement/locator.dart';
-import 'package:placement/models/resumeModel.dart';
-import 'package:placement/resources/endpoints.dart';
-import 'package:placement/services/api_models/fetchService.dart';
-import 'package:placement/services/api_models/postService.dart';
-import 'package:placement/services/generic/requestService.dart';
-import 'package:placement/shared/loadingPage.dart';
+
+import '../../../locator.dart';
+import "../../../models/resumeModel.dart";
+import '../../../resources/endpoints.dart';
+import '../../../services/api_models/fetchService.dart';
+import '../../../services/generic/requestService.dart';
+import '../../../shared/loadingPage.dart';
 
 class BottomModalApplySheet extends StatefulWidget {
   BottomModalApplySheet({super.key, required this.profile});
@@ -85,7 +85,7 @@ class _BottomModalApplySheetState extends State<BottomModalApplySheet> {
                                 ),
                                 TextButton(
                                   style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
+                                    backgroundColor: WidgetStateProperty.all(
                                       Colors.blue,
                                     ),
                                   ),
