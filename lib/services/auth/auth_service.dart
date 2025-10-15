@@ -3,14 +3,12 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:http/http.dart' as http;
-import 'package:placement/locator.dart';
-
-import 'package:placement/resources/endpoints.dart';
-
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:placement/resources/strings.dart';
-import 'package:placement/shared/GlobalCache.dart';
+
+import '../../locator.dart';
+import '../../resources/endpoints.dart';
+import '../../resources/strings.dart';
+import '../../shared/GlobalCache.dart';
 
 class AuthService {
   // FetchService _fetchService;

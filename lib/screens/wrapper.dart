@@ -16,7 +16,7 @@ class _WrapperPageState extends State<WrapperPage> {
   late AuthService _auth;
   late DataProvider data;
   final Duration _duration = Duration(milliseconds: 300);
-  bool _isCollapsed = false;
+  // bool _isCollapsed = false;
 
   @override
   void initState() {
@@ -27,9 +27,9 @@ class _WrapperPageState extends State<WrapperPage> {
 
   @override
   Widget build(BuildContext context) {
-    var _size = MediaQuery.of(context).size;
-    double _height = _size.height;
-    double _width = _size.width;
+    // var _size = MediaQuery.of(context).size;
+    // double _height = _size.height;
+    // double _width = _size.width;
     //return _auth.authStateListener() ? HomePage() : Authenticate();
     return ChangeNotifierProvider(
         create: (context) => DataProvider(),

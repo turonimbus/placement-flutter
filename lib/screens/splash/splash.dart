@@ -13,12 +13,13 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  late AuthService _auth;
+  // late AuthService _auth;
 
   @override
   void initState() {
     super.initState();
-    _auth = AuthService();
+    // _auth = AuthService();
+    AuthService();
     Timer(Duration(seconds: 2), () {
       Navigator.of(context)
           .pushNamedAndRemoveUntil('/wrapper', (Route<dynamic> route) => false);
