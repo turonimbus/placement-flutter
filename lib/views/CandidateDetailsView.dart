@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:placement/resources/R.dart';
-import 'package:placement/resources/strings.dart';
-import 'package:placement/shared/hexColor.dart';
-import 'package:placement/shared/loadingPage.dart';
-import 'package:placement/viewmodels/CandidateDetailsViewModel.dart';
-import 'package:placement/views/baseView.dart';
+
+import '../resources/R.dart';
+import '../resources/strings.dart';
+import '../shared/loadingPage.dart';
+import '../viewmodels/CandidateDetailsViewModel.dart';
+import 'baseView.dart';
 
 class CandidateDetailsView extends StatelessWidget {
   const CandidateDetailsView({super.key});
@@ -27,10 +27,10 @@ class CandidateDetailsView extends StatelessWidget {
       BuildContext context, CandidateDetailsViewModel model, double _width) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Profile"),
+        title: const Text("Profile"),
         centerTitle: true,
       ),
-      body: Container(
+      body: ConstrainedBox(
         constraints: BoxConstraints.expand(),
         child: (model.isBusy)
             ? Center(
@@ -49,13 +49,13 @@ class CandidateDetailsView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
-          Center(
+          const Center(
             child: Text("Something went Wrong"),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           _menu(context, model, _width),
@@ -69,23 +69,23 @@ class CandidateDetailsView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
           _headerAndIcon(context, model.candidate, _width),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           _studentInfo(context, model.candidate, _width),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           _myApplicationsButton(context, model.candidate, _width),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           _myResumesButton(context, model.candidate, _width),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           _menu(context, model, _width),
@@ -165,7 +165,7 @@ class CandidateDetailsView extends StatelessWidget {
   }
 
   Widget _divider() {
-    return Divider(
+    return const Divider(
       color: Color(0xFFe6e6e6),
       thickness: 1,
       indent: 10,
@@ -197,14 +197,14 @@ class CandidateDetailsView extends StatelessWidget {
     return Container(
       width: _width * 0.9,
       decoration: BoxDecoration(
-          color: Color(0xFF73A1FD).withOpacity(0.1),
+          color: const Color.fromRGBO(115, 161, 253, 0.1),
           borderRadius: BorderRadius.circular(10)),
       padding: EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: <Widget>[
           Expanded(
             flex: 3,
-            child: Container(
+            child: Padding(
               padding: EdgeInsets.only(left: 20),
               child: Text(
                 heading,
@@ -232,28 +232,28 @@ class CandidateDetailsView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            model.degreeName ?? "",
+            model.degreeName,
             style: TextStyle(color: Colors.black54),
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           Text(
-            model.departmentName ?? "",
+            model.departmentName,
             style: TextStyle(color: Colors.black54),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
-          _statusRows("Status: ", (model.season ?? "") + ", " + (model.internshipStatus ?? "")),
-          SizedBox(
+          _statusRows("Status: ", model.season + ", " + model.internshipStatus),
+          const SizedBox(
             height: 5,
           ),
-          _statusRows("Pool A Credits: ", (model.creditsPoolA ?? 0).toString()),
-          SizedBox(
+          _statusRows("Pool A Credits: ", model.creditsPoolA.toString()),
+          const SizedBox(
             height: 5,
           ),
-          _statusRows("Pool B Credits: ", (model.creditsPoolB ?? 100).toString()),
+          _statusRows("Pool B Credits: ", model.creditsPoolB.toString()),
         ],
       ),
     );
@@ -334,11 +334,11 @@ class CandidateDetailsView extends StatelessWidget {
           //   ) :
           //   _imagePlaceHolder(context, ""),
           // ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Text(
-            model.candidateName ?? "",
+            model.candidateName,
             style: TextStyle(fontSize: 30),
           ),
         ],

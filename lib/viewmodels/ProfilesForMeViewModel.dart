@@ -18,7 +18,7 @@ class ProfilesForMeViewModel extends BaseViewModel {
   bool _loading = false;
   bool _isNull = false;
   
-  List<ProfilesModel> get profiles => _profiles;
+  List<ProfilesModel>? get profiles => _profiles;
   bool get isLoading => _loading;
   bool get isNull => _isNull;
 

@@ -6,7 +6,7 @@ class LoadingPage extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return ColoredBox(
       color: Colors.transparent,
       child: Center(
         child: SpinKitChasingDots(

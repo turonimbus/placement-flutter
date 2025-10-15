@@ -36,20 +36,18 @@ class _BottomModalApplySheetState extends State<BottomModalApplySheet> {
   @override
   Widget build(BuildContext context) {
     var _width = MediaQuery.of(context).size.width;
-    return Container(
-      child: FutureBuilder(
-        future: _resumeFuture,
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.data == null) {
-            return Container(
-              width: _width * 0.9,
-              height: 200,
-              child: LoadingPage(),
-            );
-          }
-          return _listOfResume(context, _width, snapshot);
-        },
-      ),
+    return FutureBuilder(
+      future: _resumeFuture,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.data == null) {
+          return SizedBox(
+            width: _width * 0.9,
+            height: 200,
+            child: LoadingPage(),
+          );
+        }
+        return _listOfResume(context, _width, snapshot);
+      },
     );
   }
 
@@ -60,7 +58,7 @@ class _BottomModalApplySheetState extends State<BottomModalApplySheet> {
       itemCount: snapshot.data.length, //snapshot.data.length,
       itemBuilder: (BuildContext context, int index) {
         return Card(
-          child: Container(
+          child: Padding(
             padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
             child: Column(
               children: <Widget>[
@@ -94,6 +92,7 @@ class _BottomModalApplySheetState extends State<BottomModalApplySheet> {
                                     Fluttertoast.showToast(
                                         msg: "Processing...",
                                         toastLength: Toast.LENGTH_LONG);
+                                    // ignore: unused_local_variable
                                     int _apply = await _requestService
                                         .makePostRequest(
                                             EndPoints.HOST +
@@ -126,7 +125,7 @@ class _BottomModalApplySheetState extends State<BottomModalApplySheet> {
 
   Widget _headerWidget(int index) {
     if (index == 0) {
-      return Container(
+      return const Padding(
         padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
         child: Text(
           "Choose the resume you wish to apply with: ",
@@ -134,7 +133,7 @@ class _BottomModalApplySheetState extends State<BottomModalApplySheet> {
         ),
       );
     }
-    return SizedBox();
+    return const SizedBox.shrink();
   }
 
   Future<dynamic> _giveAppliedResumeList() async {

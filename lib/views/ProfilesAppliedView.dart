@@ -35,23 +35,11 @@ class ProfilesAppliedView extends StatelessWidget {
       return Center(
         child: Text("No Applications found"),
       );
-    return Container(
-      constraints: BoxConstraints.expand(),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            _profilesList(context, model),
-          ],
-        ),
-      ),
-    );
+    return _profilesList(context, model);
   }
 
   Widget _profilesList(BuildContext context, ProfilesAppliedViewModel model) {
     return ListView.builder(
-      shrinkWrap: true,
-      physics: ScrollPhysics(),
       padding: EdgeInsets.all(0),
       itemCount: model.profiles.length,
       itemBuilder: (context, index) {

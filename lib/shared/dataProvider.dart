@@ -14,8 +14,8 @@ class DataProvider with ChangeNotifier {
   //   _placementResultSelector = true;
   // }
 
+  // bool _placementResultSelector = true;
   int _yearSelector = 0;
-  bool _placementResultSelector = true;
 
   int get yearSelector => _yearSelector;
   void yearSetter(int year) {

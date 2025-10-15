@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:placement/resources/strings.dart';
-import 'package:placement/services/api_models/fetchService.dart';
-import 'package:placement/services/auth/auth_service.dart';
-import 'package:placement/shared/loadingPage.dart';
+import '../../resources/strings.dart';
+import '../../services/auth/auth_service.dart';
+import '../../shared/loadingPage.dart';
 
 class SplashPage extends StatefulWidget {
   SplashPage({super.key});
@@ -28,8 +27,8 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
-    final double height = MediaQuery.of(context).size.height;
+    // final double width = MediaQuery.of(context).size.width;
+    // final double height = MediaQuery.of(context).size.height;
 
     return Material(
         child: Stack(

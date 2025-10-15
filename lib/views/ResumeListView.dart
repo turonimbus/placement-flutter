@@ -40,24 +40,12 @@ class ResumeListView extends StatelessWidget {
       return Center(
         child: Text("No Resumes Found"),
       );
-    return Container(
-      constraints: BoxConstraints.expand(),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            _resumeList(context, model, _width),
-          ],
-        ),
-      ),
-    );
+    return _resumeList(context, model, _width);
   }
 
   Widget _resumeList(
       BuildContext context, ResumeListViewModel model, double _width) {
     return ListView.builder(
-      shrinkWrap: true,
-      physics: ScrollPhysics(),
       itemCount: model.resumes.length,
       itemBuilder: (context, index) {
         return Card(
@@ -73,7 +61,7 @@ class ResumeListView extends StatelessWidget {
                   fontWeight: FontWeight.bold, height: 1.1, fontSize: 15),
             ),
             subtitle: Text(
-              "Verified: " + ((model.resumes[index].isVerified ?? false) ? "Yes" : "No"),
+              "Verified: " + (model.resumes[index].isVerified! ? "Yes" : "No"),
               style: TextStyle(height: 1.85),
             ),
           ),

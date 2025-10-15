@@ -1,12 +1,8 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:placement/resources/endpoints.dart';
-import 'package:placement/resources/strings.dart';
 import 'package:placement/services/auth/auth_service.dart';
 
 class FetchService {
@@ -23,7 +19,7 @@ class FetchService {
   }
 
   Future<dynamic> fetchDataService(String endPoint) async {
-    String _jsonData;
+    // String _jsonData;
     Map<String, String> _headers = await _auth.fetchHeaderProvider(endPoint);
     try {
       var res = await http.get(Uri.parse(endPoint), headers: _headers);

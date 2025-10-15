@@ -42,7 +42,7 @@ class ResumeModel {
       additionalCourses: _data['additionalCourses'],
       minorCourses: _data['minorCourses'],
       languages: _data['languages'],
-      isVerified: _data['isVerified']
+      isVerified: _data['isVerified'] ?? false
     );
   }
 }
