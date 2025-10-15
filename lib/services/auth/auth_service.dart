@@ -20,8 +20,8 @@ class AuthService {
     initState();
   }
 
-  void initState() {
-    _openEncryptedBox();
+  Future<void> initState() async {
+    await _openEncryptedBox();
   }
 
   var _box;

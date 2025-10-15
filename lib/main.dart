@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:placement/locator.dart';
-import 'package:placement/resources/R.dart';
-import 'package:placement/services/routing/placement_routes.dart';
 
-void main() {
+import 'locator.dart';
+import 'resources/R.dart';
+import 'services/routing/placement_routes.dart';
+import 'services/auth/auth_service.dart';
+
+void main() async {
+  // TODO: Look for more consistent method that prevent race condition when phone is sleeping
+  await AuthService().initState();
   setupLocator();
   runApp(MyApp());
 }
