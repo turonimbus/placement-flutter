@@ -41,7 +41,6 @@ class _BottomModalApplySheetState extends State<BottomModalApplySheet> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.data == null) {
           return SizedBox(
-            width: _width * 0.9,
             height: 200,
             child: LoadingPage(),
           );
@@ -104,9 +103,17 @@ class _BottomModalApplySheetState extends State<BottomModalApplySheet> {
                                               snapshot.data[index].id.toString()
                                           //"cover_letter": null
                                         });
-                                    // TODO : handle the response
                                     Navigator.of(context).pop();
-                                    Navigator.of(context).pop();
+                                    if (_apply == -1){
+                                      // return true to reload parent page
+                                      Navigator.of(context).pop(true);
+                                    } else {
+                                      Fluttertoast.showToast(
+                                        msg: "An error occurred. Please check your connection.",
+                                        textColor: Colors.red,
+                                        toastLength: Toast.LENGTH_LONG);
+                                      Navigator.of(context).pop(false);
+                                    }
                                   },
                                 ),
                               ],
@@ -114,7 +121,7 @@ class _BottomModalApplySheetState extends State<BottomModalApplySheet> {
                           );
                         },
                       )
-                    : Container(),
+                    : const SizedBox.shrink(),
               ],
             ),
           ),

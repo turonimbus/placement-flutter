@@ -23,7 +23,7 @@ class ProfilesForMeView extends StatelessWidget {
       return Center(
         child: LoadingPage(),
       );
-    return Container(
+    return ConstrainedBox(
       constraints: BoxConstraints.expand(),
       child: _applyList(context, model),
     );
@@ -34,32 +34,12 @@ class ProfilesForMeView extends StatelessWidget {
       return const Center(
         child: Text("Not Eligible for any active season"),
       );
-      // return BaseView<CandidateDetailsViewModel>(
-      //   onModelReady: (model) {
-      //     model.fetchCandidate();
-      //   },
-      //   builder: (context, model, child) {
-      //     if (model.candidate.internshipStatus == "Closed" ||
-      //         model.candidate.season == "Not Eligible") {
-      //       return Center(
-      //         child: Text("Not Eligible for any active season"),
-      //       );
-      //     }
-
-      //     return Center(
-      //       child: Text("Not Eligible for any open profiles!"),
-      //     );
-      //   },
-      // );
-      // return Center(
-      //   child: Text("Not Eligible for any open profiles!"),
-      // );
     }
     return RefreshIndicator(
       onRefresh: model.refreshAndWait,
       child: ListView.builder(
         shrinkWrap: true,
-        itemCount: model.profiles!.length,
+        itemCount: model.profiles?.length,
         padding: EdgeInsets.all(5),
         itemBuilder: (BuildContext context, int index) {
           return Card(

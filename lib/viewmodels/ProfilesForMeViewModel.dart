@@ -13,7 +13,7 @@ class ProfilesForMeViewModel extends BaseViewModel {
   ApplyService _applyService = locator<ApplyService>();
   GlobalCache _cache = locator<GlobalCache>();
   DeleteService _deleteService = DeleteService();
-  List<ProfilesModel> _profiles = [];
+  List<ProfilesModel>? _profiles= [];
   bool _isDisposed = false;
   bool _loading = false;
   bool _isNull = false;
@@ -43,14 +43,26 @@ class ProfilesForMeViewModel extends BaseViewModel {
     return Jiffy.parse(it).toLocal().yMMMd + " - " + Jiffy.parse(it).toLocal().Hm;
   }
 
-  String profileStatus(int index) {
-    if(_profiles[index].status == "locked") return _profiles[index].application.statusDisplayName;
-    else if(_profiles[index].status == "open" && _profiles[index].applicationDeadline !=null) {
-      String date = "Apply before " + formatDate(_profiles[index].applicationDeadline!);
-      return date;
+   String profileStatus(int index) {
+    final profile = _profiles?[index];
+    if (profile == null) return "-";
+
+    final status = profile.status ?? "";
+
+    if (status == "locked") {
+      return profile.application?.statusDisplayName ?? "-";
     }
-    else if(_profiles[index].status == "withdrawable") return _profiles[index].application.resume.title + " Sent";
-    return ModelResources.analyseProfileStatus(_profiles[index].status!);
+
+    if (status == "open" && profile.applicationDeadline != null) {
+      return "Apply before ${formatDate(profile.applicationDeadline!)}";
+    }
+
+    if (status == "withdrawable") {
+      final title = profile.application?.resume?.title ?? "";
+      return title.isNotEmpty ? "$title Sent" : "Application Sent";
+    }
+
+    return ModelResources.analyseProfileStatus(status);
   }
 
   Future<void> refreshAndWait() async {

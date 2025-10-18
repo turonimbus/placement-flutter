@@ -22,7 +22,7 @@ class ApplyService {
     return null;
   }
 
-  Future<List<ProfilesModel>> fetchProfileForMe() async {
+  Future<List<ProfilesModel>?> fetchProfileForMe() async {
     List<ProfilesModel> _list = [];
     if(_cache.profilesForMe == null) {
       var _data = await _requestService.makeGetRequest(
@@ -37,10 +37,10 @@ class ApplyService {
         }
       }
     }
-    return _cache.profilesForMe ?? [];
+    return _cache.profilesForMe;
   }
 
-  Future<CandidateModel> getCandidateProfile() async {
+  Future<CandidateModel?> getCandidateProfile() async {
     if(_cache.candidateData == null) {
       var _data = await _requestService.makeGetRequest(
         EndPoints.HOST + EndPoints.CANDIDATE
@@ -60,7 +60,7 @@ class ApplyService {
         _cache.candidateData = candidate;
       }
     }
-    return _cache.candidateData ?? CandidateModel();
+    return _cache.candidateData;
   }
 
   Future<List<ProfilesModel>> fetchProfileForAll() async {
