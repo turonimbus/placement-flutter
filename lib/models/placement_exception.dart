@@ -1,4 +1,4 @@
-class PlacementException extends Error {
+class PlacementException implements Exception {
   final String message;
   PlacementException(this.message);
 

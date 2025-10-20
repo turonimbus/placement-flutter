@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../shared/ErrorWidget.dart';
 import '../shared/ProfileStatusIcon.dart';
 import '../shared/loadingPage.dart';
 import '../viewmodels/ProfilesForMeViewModel.dart';
@@ -19,7 +20,7 @@ class ProfilesForMeView extends StatelessWidget {
   }
 
   Widget _applyWidget(BuildContext context, ProfilesForMeViewModel model) {
-    if (model.isLoading)
+    if (model.isBusy)
       return Center(
         child: LoadingPage(),
       );
@@ -30,16 +31,17 @@ class ProfilesForMeView extends StatelessWidget {
   }
 
   Widget _applyList(BuildContext context, ProfilesForMeViewModel model) {
-    if (model.isNull) {
-      return const Center(
-        child: Text("Not Eligible for any active season"),
-      );
+    final profiles = model.profiles;
+    if (profiles == null) {
+      return ErrorWidgetWithRefreshCallback(onRefresh: model.refreshAndWait);
+    }
+    if (profiles.isEmpty){
+      return Center(child: Text("No Active Profiles"),);
     }
     return RefreshIndicator(
       onRefresh: model.refreshAndWait,
       child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: model.profiles?.length,
+        itemCount: profiles.length,
         padding: EdgeInsets.all(5),
         itemBuilder: (BuildContext context, int index) {
           return Card(
@@ -47,9 +49,9 @@ class ProfilesForMeView extends StatelessWidget {
             elevation: 0.3,
             child: ListTile(
               title: Text(
-                model.profiles![index].companyName! +
+                profiles[index].companyName +
                     " (" +
-                    model.profiles![index].name! +
+                    profiles[index].name +
                     ")",
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
@@ -63,16 +65,15 @@ class ProfilesForMeView extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.of(context).pushNamed("/profileDetail", arguments: {
-                  "profileId": model.profiles![index].profileId,
+                  "profileId": profiles[index].profileId,
                   "parentViewModel": model,
-                  "profileModel": model.profiles![index]
+                  "profileModel": profiles[index]
                 });
               },
-              //trailing: _profileStatusIcon(context,model.profiles![index].status,model.profiles![index])
               trailing: ProfileStatusIcon(
                 model: model,
-                profile: model.profiles![index],
-                status: model.profiles![index].status!,
+                profile: profiles[index],
+                status: profiles[index].status,
               ),
             ),
           );

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 import 'package:hive_flutter/hive_flutter.dart';
@@ -30,7 +29,7 @@ class AuthService {
     try {
       var res = await http.post(Uri.parse(EndPoints.HOST + EndPoints.LOGIN),
           body: data);
-      log("GOT CODE FOR LOGIN ${res.statusCode}");
+      print("GOT CODE FOR LOGIN ${res.statusCode}");
       if (res.statusCode == 200) {
         jsonData = json.decode(res.body);
         await _encrypt(jsonData["access"], jsonData["refresh"]);
@@ -90,7 +89,7 @@ class AuthService {
   }
 
   Future<void> _openEncryptedBox() async {
-    log("initialising box");
+    print("initialising box");
     await Hive.initFlutter();
     await Hive.openBox(Strings.AUTH_BOX);
     _box = Hive.box(Strings.AUTH_BOX);

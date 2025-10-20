@@ -3,30 +3,30 @@ import 'package:placement/models/applicationModel.dart';
 
 class ProfilesModel {
   final int? profileId;
-  final String? name;
+  final String name;
   final int? companyId;
-  final String? companyName;
+  final String companyName;
   final String? companySector;
   final String? companyEmail;
   final String? companyDescription;
   final String? website;
   final String? applicationDeadline;
-  final String? status;
+  final String status;
   final bool? requiresCoverLetter;
   final application;
   final List<RoundSetModel>? roundSet;
 
   ProfilesModel({
     this.profileId,
-    this.name,
+    required this.name,
     this.companyId,
-    this.companyName,
+    required this.companyName,
     this.companySector,
     this.companyEmail,
     this.companyDescription,
     this.website,
     this.applicationDeadline,
-    this.status,
+    required this.status,
     this.requiresCoverLetter,
     this.application,
     this.roundSet
@@ -42,9 +42,9 @@ class ProfilesModel {
     }
     return ProfilesModel(
       profileId: json['id'],
-      name: json['name'],
+      name: json['name'] ?? '-',
       companyId: json['company']['id'],
-      companyName: json['company']['name'],
+      companyName: json['company']['name'] ?? '-',
       companySector: json['company']['sector'],
       companyEmail: json['company']['email'],
       companyDescription: json['company']['description'],

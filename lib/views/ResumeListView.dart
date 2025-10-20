@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
+import '../models/placement_exception.dart';
+import '../models/resumeModel.dart';
 import '../shared/loadingPage.dart';
 import '../viewmodels/ResumeListViewModel.dart';
 import 'baseView.dart';
@@ -36,37 +39,54 @@ class ResumeListView extends StatelessWidget {
       return Center(
         child: LoadingPage(),
       );
+    final resumes = model.resumes;
+    if (resumes == null){
+      return Center(child: Text("Something went Wrong"),);
+    }
     if (model.isEmpty)
       return Center(
         child: Text("No Resumes Found"),
       );
-    return _resumeList(context, model, _width);
+    return _resumeList(context, model, resumes, _width);
   }
 
   Widget _resumeList(
-      BuildContext context, ResumeListViewModel model, double _width) {
+      BuildContext context, ResumeListViewModel model, List<ResumeModel> resumes, double _width) {
     return ListView.builder(
-      itemCount: model.resumes.length,
+      itemCount: resumes.length,
       itemBuilder: (context, index) {
         return Card(
           margin: EdgeInsets.only(bottom: 1),
           elevation: 0.3,
           child: ListTile(
             onTap: () async {
-              await model.launchURL(model.resumes[index].resumeUrl!);
+              await launchURL(model, resumes, index);
             },
             title: Text(
-              model.resumes[index].title!,
+              resumes[index].title,
               style: TextStyle(
                   fontWeight: FontWeight.bold, height: 1.1, fontSize: 15),
             ),
             subtitle: Text(
-              "Verified: " + (model.resumes[index].isVerified! ? "Yes" : "No"),
+              "Verified: " + (resumes[index].isVerified ? "Yes" : "No"),
               style: TextStyle(height: 1.85),
             ),
           ),
         );
       },
     );
+  }
+
+  Future<void> launchURL(ResumeListViewModel model, List<ResumeModel> resumes, int index) async {
+    String? resumeUrl = resumes[index].resumeUrl;
+    if (resumeUrl != null){
+      try {
+        await model.launchURL(resumeUrl);
+      } on PlacementException catch (e) {
+       Fluttertoast.showToast(msg: e.message); 
+      }
+    } else {
+      Fluttertoast.showToast(msg: "Resume URL not found");
+    }
   }
 }

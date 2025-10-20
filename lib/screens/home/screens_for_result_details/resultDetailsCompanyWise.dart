@@ -97,7 +97,7 @@ class _ResultDetailsCompanyWiseState extends State<ResultDetailsCompanyWise>
                 ),
                 title: TextField(
                   maxLines: 1,
-                  cursorColor: Colors.white.withOpacity(0.75),
+                  cursorColor: const Color(0xBFFFFFFF),
                   style: TextStyle(
                     color: Colors.white,
                   ),
@@ -106,7 +106,7 @@ class _ResultDetailsCompanyWiseState extends State<ResultDetailsCompanyWise>
                     hintText: "Search Name...",
                     border: InputBorder.none,
                     hintStyle: TextStyle(
-                      color: Colors.white.withOpacity(0.75),
+                      color: const Color(0xBFFFFFFF),
                     ),
                   ),
                 ),

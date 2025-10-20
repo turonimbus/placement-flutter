@@ -95,7 +95,7 @@ class CandidateDetailsView extends StatelessWidget {
   }
 
   Widget _menu(BuildContext context, dynamic model, double _width) {
-    return Container(
+    return SizedBox(
       width: _width * 0.9,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -212,7 +212,7 @@ class CandidateDetailsView extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(
+          const Expanded(
             flex: 1,
             child: Icon(
               Icons.arrow_forward_ios,
@@ -225,7 +225,7 @@ class CandidateDetailsView extends StatelessWidget {
   }
 
   Widget _studentInfo(BuildContext context, dynamic model, double _width) {
-    return Container(
+    return SizedBox(
       width: _width * 0.9,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -278,62 +278,37 @@ class CandidateDetailsView extends StatelessWidget {
 
   Widget _headerAndIcon(BuildContext context, dynamic model, double _width) {
     final String? displayPicture = model.displayPicture;
-    return Container(
+    return SizedBox(
       width: _width * 0.9,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Container(
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  width: 60,
-                  height: 60,
-                  decoration: const BoxDecoration(
-                      color: Color(0xFFE0E0E0), shape: BoxShape.circle),
-                  child: Icon(
-                    Icons.account_circle,
-                    size: 60,
-                    color: Theme.of(context).primaryColor,
-                  ),
+          Stack(
+            children: <Widget>[
+              Container(
+                width: 60,
+                height: 60,
+                decoration: const BoxDecoration(
+                    color: Color(0xFFE0E0E0), shape: BoxShape.circle),
+                child: Icon(
+                  Icons.account_circle,
+                  size: 60,
+                  color: Theme.of(context).primaryColor,
                 ),
-                if (displayPicture != null)
-                CachedNetworkImage(
-                  imageUrl: displayPicture,
-                  placeholder: _imagePlaceHolder,
-                  imageBuilder: (context, imageProvider) {
-                    return CircleAvatar(
-                      backgroundImage: imageProvider,
-                      radius: 30,
-                    );
-                  },
-                ),
-              ],
-            ),
+              ),
+              if (displayPicture != null)
+              CachedNetworkImage(
+                imageUrl: displayPicture,
+                placeholder: _imagePlaceHolder,
+                imageBuilder: (context, imageProvider) {
+                  return CircleAvatar(
+                    backgroundImage: imageProvider,
+                    radius: 30,
+                  );
+                },
+              ),
+            ],
           ),
-          // Container(
-          //   width: 60,
-          //   height: 60,
-          //   decoration: BoxDecoration(
-          //     color: Colors.red,
-          //     shape: BoxShape.circle,
-          //     image: DecorationImage(
-          //       image:
-          //     )
-          //   ),
-          //   child: (model.displayPicture != null) ?
-          //   CachedNetworkImage(
-          //     imageUrl: model.displayPicture,
-          //     placeholder: _imagePlaceHolder,
-          //     imageBuilder: (context, imageProvider) {
-          //       return CircleAvatar(
-          //         backgroundImage: imageProvider,
-          //         radius: 30,
-          //       );
-          //     },
-          //   ) :
-          //   _imagePlaceHolder(context, ""),
-          // ),
           const SizedBox(
             width: 10,
           ),

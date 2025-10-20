@@ -1,22 +1,20 @@
-
 import 'package:flutter/material.dart';
-import 'package:placement/locator.dart';
-import 'package:placement/shared/GlobalCache.dart';
-import 'package:placement/viewmodels/BaseViewModel.dart';
+
+import '../locator.dart';
+import '../shared/GlobalCache.dart';
+import 'BaseViewModel.dart';
 
 class ResultPageViewModel extends BaseViewModel {
   
   final ScrollController _scrollController = ScrollController();
-  GlobalCache _cache = locator<GlobalCache>();
-  int? _yearSelectionVariable;
-  int? _resultTypeVariable; 
-  int? _sortVariable;
-  bool _isDisposed = false;
-
-  int? get yearSelectionVariable => _yearSelectionVariable;
-  int? get resultTypeVariable => _resultTypeVariable;
-  int? get sortVariable => _sortVariable;
   ScrollController get scrollController => _scrollController;
+
+  GlobalCache _cache = locator<GlobalCache>();
+
+  late int _yearSelectionVariable, _resultTypeVariable, _sortVariable;
+  int get yearSelectionVariable => _yearSelectionVariable;
+  int get resultTypeVariable => _resultTypeVariable;
+  int get sortVariable => _sortVariable;
 
   @override
   void dispose() { 
@@ -26,38 +24,31 @@ class ResultPageViewModel extends BaseViewModel {
 
   void retrieveCache() {
     if(_cache.filterFields == null) {
-      Map<String, dynamic> _cacheMap = {
+      Map<String, int> _cacheMap = {
         "year" : 0,
         "type" : 0,
         "sort" : 0
       };
       _cache.filterFields = _cacheMap;
-      _yearSelectionVariable = 0;
-      _resultTypeVariable = 0;
-      _sortVariable = 0;
-    } else {
-      _yearSelectionVariable = _cache.filterFields!['year'];
-      _resultTypeVariable = _cache.filterFields!['type'];
-      _sortVariable = _cache.filterFields!['sort'];
     }
+    _yearSelectionVariable = _cache.filterFields!['year'] ?? 0;
+    _resultTypeVariable = _cache.filterFields!['type'] ?? 0;
+    _sortVariable = _cache.filterFields!['sort'] ?? 0;
   }
 
   void _cacheFields() {
-    _cache.filterFields!['year'] = _yearSelectionVariable;
-    _cache.filterFields!['type'] = _resultTypeVariable;
-    _cache.filterFields!['sort'] = _sortVariable;
+    _cache.filterFields
+    ?..['year'] = _yearSelectionVariable
+    ..['type'] = _resultTypeVariable
+    ..['sort'] = _sortVariable;
   }
 
-  void _notif() {
-    if(!_isDisposed) notifyListeners();
-  }
-
-  void setFields(int year, int type, int sort) {
-    _yearSelectionVariable = year;
-    _resultTypeVariable = type;
-    _sortVariable = sort;
+  void setFields(int? year, int? type, int? sort) {
+    _yearSelectionVariable = year ?? 0;
+    _resultTypeVariable = type ?? 0;
+    _sortVariable = sort ?? 0;
     print("SETTING THE FIELDS $_yearSelectionVariable - $_resultTypeVariable - $_sortVariable");
-    _notif();
+    reload();
     _deleteCachedResults();
     _cacheFields();
   }
@@ -65,23 +56,5 @@ class ResultPageViewModel extends BaseViewModel {
   void _deleteCachedResults() {
     _cache.companyWiseResults = null;
     _cache.branchWiseResults = null;
-  }
-
-  void selectYear(int year) {
-    _yearSelectionVariable = year;
-    _notif();
-    _cacheFields();
-  }
-
-  void selectSort(int sort) {
-    _sortVariable = sort;
-    _notif();
-    _cacheFields();
-  }
-
-  void selectResultType(int type) {
-    _resultTypeVariable = type;
-    _notif();
-    _cacheFields();
   }
 }

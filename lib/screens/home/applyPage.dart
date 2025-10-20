@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:placement/resources/strings.dart';
-import 'package:placement/views/ProfilesForAllView.dart';
-import 'package:placement/views/ProfilesForMeView.dart';
+
+import '../../resources/strings.dart';
+import '../../views/ProfilesForAllView.dart';
+import '../../views/ProfilesForMeView.dart';
 
 class ApplyPage extends StatefulWidget {
   ApplyPage({super.key});

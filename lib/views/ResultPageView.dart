@@ -64,28 +64,24 @@ class _ResultPageViewState extends State<ResultPageView>
             child: FloatingActionButton(
               backgroundColor: R.primaryCol,
               onPressed: () {
-                showModalBottomSheet(
+                showModalBottomSheet<Map<String,int>>(
                     context: context,
                     isScrollControlled: true,
                     builder: (context) {
                       return SafeArea(
                         child: BottomSheetForm(
-                          yearSelectionVariable: model.yearSelectionVariable!,
-                          resultTypeVariable: model.resultTypeVariable!,
-                          sortVariable: model.sortVariable!,
-                          valueChangedForYear: model.selectYear,
-                          valueChangedForResult: model.selectResultType,
-                          valueChangedForSort: model.selectSort,
+                          yearSelectionVariable: model.yearSelectionVariable,
+                          resultTypeVariable: model.resultTypeVariable,
+                          sortVariable: model.sortVariable,
                         ),
                       );
                     }).then((value) {
                   if (value != null) {
-                    model.setFields(
-                        value['year'], value['type'], value['sort']);
+                    model.setFields(value['year'], value['type'], value['sort']);
                   }
                 });
               },
-              child: Icon(
+              child: const Icon(
                 Icons.filter_list,
               ),
             ),
@@ -115,14 +111,14 @@ class _ResultPageViewState extends State<ResultPageView>
         physics: NeverScrollableScrollPhysics(),
         children: <Widget>[
           ResultsBranchWiseView(
-            yearSelector: model.yearSelectionVariable!,
-            internSwitch: model.resultTypeVariable!,
-            sortSwitch: model.sortVariable!,
+            yearSelector: model.yearSelectionVariable,
+            internSwitch: model.resultTypeVariable,
+            sortSwitch: model.sortVariable,
           ),
           ResultsCompanyWiseView(
-            yearSelector: model.yearSelectionVariable!,
-            internSwitch: model.resultTypeVariable!,
-            sortSwitch: model.sortVariable!,
+            yearSelector: model.yearSelectionVariable,
+            internSwitch: model.resultTypeVariable,
+            sortSwitch: model.sortVariable,
           ),
         ],
       ),

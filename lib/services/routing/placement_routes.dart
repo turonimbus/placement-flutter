@@ -33,7 +33,7 @@ class RouteGeneratorPlacement {
       case '/notifs':
         return MaterialPageRoute(builder: (_) => NotificationsScreen());
       case '/profileDetail':
-        var _profileArgs = settings.arguments;
+        Object? _profileArgs = settings.arguments;
         return MaterialPageRoute(
             builder: (_) => CompanyDetailView(args: _profileArgs));
       case '/profileApplied':

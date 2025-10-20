@@ -1,32 +1,23 @@
-import 'dart:developer';
-
-import 'package:placement/locator.dart';
-import 'package:placement/models/calendarEventModel.dart';
-import 'package:placement/services/generic/calendarService.dart';
-import 'package:placement/viewmodels/BaseViewModel.dart';
+import '../locator.dart';
+import '../models/calendarEventModel.dart';
+import '../services/generic/calendarService.dart';
+import 'BaseViewModel.dart';
 
 class CalendarViewModel extends BaseViewModel {
   // CalendarController _calendarController = CalendarController();
+  CalendarService _calendarService = locator<CalendarService>();
   List<CalendarEventModel> _events = [];
   List<CalendarEventModel> _upcomingEvents = [];
   List<CalendarEventModel> _selectedEvents = [];
-  CalendarService _calendarService = locator<CalendarService>();
-  Map<DateTime, List<CalendarEventModel>?> _eventMap = {};
+  Map<DateTime, List<CalendarEventModel>> _eventMap = {};
+  Map<DateTime, List<CalendarEventModel>> get eventMap => _eventMap;
   bool _displayUpcoming = true;
-  bool _isDisposed = false;
+  bool get displayUpcoming => _displayUpcoming;
 
   // CalendarController get calendarController => _calendarController;
-  Map<DateTime, List<CalendarEventModel>?> get eventMap => _eventMap;
   List<CalendarEventModel> get displayEvents => (_displayUpcoming)
       ? _upcomingEvents
       : _sortedCalendarModel(_selectedEvents);
-  bool get displayUpcoming => _displayUpcoming;
-
-  @override
-  void dispose() {
-    _isDisposed = true;
-    super.dispose();
-  }
 
   List<CalendarEventModel> _sortedCalendarModel(
       List<CalendarEventModel> unsorted) {
@@ -36,10 +27,6 @@ class CalendarViewModel extends BaseViewModel {
       return aDate.compareTo(bDate);
     });
     return unsorted;
-  }
-
-  void _notif() {
-    if (!_isDisposed) notifyListeners();
   }
 
   Future<void> populateCalendar() async {
@@ -57,12 +44,12 @@ class CalendarViewModel extends BaseViewModel {
         }
         DateTime createDay = DateTime(eveDay.year, eveDay.month, eveDay.day);
         
-        _eventMap.putIfAbsent(createDay, () => [])!.add(item);
+        _eventMap.putIfAbsent(createDay, () => []).add(item);
         
         if (today.isBefore(eveDay)) _upcomingEvents.add(item);
       }
       _upcomingEvents = _sortedCalendarModel(_upcomingEvents);
-      log("UPCOMING! ${_upcomingEvents.length}");
+      print("UPCOMING! ${_upcomingEvents.length}");
     }
     setIdle();
   }
@@ -74,6 +61,6 @@ class CalendarViewModel extends BaseViewModel {
     } else {
       _displayUpcoming = true;
     }
-    _notif();
+    reload();
   }
 }

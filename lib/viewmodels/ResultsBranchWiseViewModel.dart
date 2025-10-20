@@ -1,34 +1,27 @@
-
-import 'package:placement/locator.dart';
-import 'package:placement/models/branchConciseModel.dart';
-import 'package:placement/services/generic/resultService.dart';
-import 'package:placement/shared/GlobalCache.dart';
-import 'package:placement/viewmodels/BaseViewModel.dart';
+import '../locator.dart';
+import '../models/branchConciseModel.dart';
+import '../services/generic/resultService.dart';
+import '../shared/GlobalCache.dart';
+import 'BaseViewModel.dart';
 
 class ResultsBranchWiseViewModel extends BaseViewModel {
 
   ResultService _resultService = locator<ResultService>();
   GlobalCache _cache = locator<GlobalCache>();
-  List<BranchConciseModel> _branchResults = [];
-  int? _yearIndex, _internSwitch, _sortSwitch;
-  bool _isDisposed = false;
 
-  List<BranchConciseModel> get branchResults => _branchResults;
-  int? get yearIndex => _yearIndex;
-  int? get internSwitch => _internSwitch;
-  int? get sortSwitch => _sortSwitch;
+  List<BranchConciseModel>? _branchResults = [];
+  List<BranchConciseModel>? get branchResults => _branchResults;
 
-  @override
-  void dispose() { 
-    _isDisposed = true;
-    super.dispose();
-  }
+  late int _yearIndex, _internSwitch, _sortSwitch;
+  int get yearIndex => _yearIndex;
+  int get internSwitch => _internSwitch;
+  int get sortSwitch => _sortSwitch;
 
-  void setResultFilter(int? yrIndex, int? internSwitcher, int? sortSwitch) {
+  Future<void> setResultFilter(int yrIndex, int internSwitcher, int sortSwitch) async {
     _yearIndex = yrIndex;
     _internSwitch = internSwitcher;
     _sortSwitch = sortSwitch;
-    _populateResults();
+    await _populateResults();
   }
 
   Future<void> refreshResults() async {
@@ -36,17 +29,14 @@ class ResultsBranchWiseViewModel extends BaseViewModel {
     await _populateResults();
   }
 
-  void notif() {
-    if(!_isDisposed) notifyListeners();
-  }
-
   Future<void> _populateResults() async {
-    _branchResults = (await _resultService.branchWiseResults(_yearIndex!, _internSwitch!))!;
+    setLoading();
+    _branchResults = await _resultService.branchWiseResults(_yearIndex, _internSwitch);
     if(_sortSwitch == 1) {
-      _branchResults.sort(
-        (a,b) => a.studentBranchName!.compareTo(b.studentBranchName!)
+      _branchResults?.sort(
+        (a,b) => a.studentBranchName.compareTo(b.studentBranchName)
       );
     }
-    notif();
+    setIdle();
   }
 }

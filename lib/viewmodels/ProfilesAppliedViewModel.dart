@@ -1,27 +1,18 @@
-
 import 'package:jiffy/jiffy.dart';
-import 'package:placement/locator.dart';
-import 'package:placement/models/profilesModel.dart';
-import 'package:placement/resources/modelResources.dart';
-import 'package:placement/services/generic/applyService.dart';
-import 'package:placement/viewmodels/BaseViewModel.dart';
+
+import '../locator.dart';
+import '../models/profilesModel.dart';
+import '../resources/modelResources.dart';
+import '../services/generic/applyService.dart';
+import 'BaseViewModel.dart';
 
 class ProfilesAppliedViewModel extends BaseViewModel {
 
   ApplyService _applyService = locator<ApplyService>();
-  List<ProfilesModel> _profiles = [];
-  bool _isLoading = false;
-  bool _isDisposed = false;
+  List<ProfilesModel>? _profiles = [];
+  List<ProfilesModel>? get profiles => _profiles;
 
-  List<ProfilesModel> get profiles => _profiles;
-  bool get isLoading => _isLoading;
-  bool get isEmpty => (!_isLoading)&&(_profiles.length==0);
-
-  @override
-  void dispose() { 
-    _isDisposed = true;
-    super.dispose();
-  }
+  bool get isEmpty => (!isBusy)&&(_profiles?.length==0);
 
   String formatDate(String it) {
     if(it == "") return "-";
@@ -29,24 +20,24 @@ class ProfilesAppliedViewModel extends BaseViewModel {
   }
 
   String profileStatus(int index) {
-    if(_profiles[index].status == "locked") return _profiles[index].application.statusDisplayName;
-    else if(_profiles[index].status == "open" && _profiles[index].applicationDeadline !=null) {
-      String date = "Apply before " + formatDate(_profiles[index].applicationDeadline!);
+    final profiles = _profiles;
+    if (profiles == null) {
+      return "-";
+    };
+    if(profiles[index].status == "locked") return profiles[index].application.statusDisplayName ?? '-';
+    else if(profiles[index].status == "open" && profiles[index].applicationDeadline !=null) {
+      String date = "Apply before " + formatDate(profiles[index].applicationDeadline!);
       return date;
+    } else if (profiles[index].status == "withdrawable") {
+      final title = profiles[index].application?.resume?.title ?? "";
+      return title.isNotEmpty ? "$title Sent" : "Application Sent";
     }
-    else if(_profiles[index].status == "withdrawable") return _profiles[index].application.resume.title + " Sent";
-    return ModelResources.analyseProfileStatus(_profiles[index].status!);
-  }
-
-  void notif() {
-    if(!_isDisposed) notifyListeners();
+    return ModelResources.analyseProfileStatus(profiles[index].status);
   }
 
   Future<void> fetchProfilesApplied() async {
-    _isLoading = true;
-    notif();
+    setLoading();
     _profiles = await _applyService.fetchProfileApplied();
-    _isLoading = false;
-    notif();
+    setIdle();
   }
 }

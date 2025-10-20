@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import './baseView.dart';
+import 'baseView.dart';
 import '../resources/R.dart';
 import '../shared/hexColor.dart';
 import '../shared/loadingPage.dart';
@@ -56,7 +56,7 @@ class _CalendarViewState extends State<CalendarView> {
 
   Widget _calendarBody(
       BuildContext context, CalendarViewModel model, double _width) {
-    final LinkedHashMap events = LinkedHashMap<DateTime, dynamic>(
+    final LinkedHashMap events = LinkedHashMap<DateTime, List<CalendarEventModel>>(
         equals: isSameDay, hashCode: getHashCode)
       ..addAll(model.eventMap);
     return SingleChildScrollView(
@@ -102,18 +102,7 @@ class _CalendarViewState extends State<CalendarView> {
             },
             calendarFormat: _format,
           ),
-
-          // TableCalendar(
-          // events: model.eventMap,
-          //   calendarController: model.calendarController,
-          // onDaySelected: (day, events) {
-          //   model.onSelect(events);
-          //   //List<CalendarEventModel> x = events;
-          //   //print("FUKIN EVENTS"+events.toString()+" len "+events.length.toString());
-          // },
-          //
-          // ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           _eventsDisplay(context, model, _width),
@@ -129,7 +118,7 @@ class _CalendarViewState extends State<CalendarView> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         (model.displayUpcoming)
-            ? Container(
+            ? SizedBox(
                 width: _width,
                 child: Container(
                   margin: EdgeInsets.fromLTRB(20, 0, 0, 10),
@@ -142,7 +131,7 @@ class _CalendarViewState extends State<CalendarView> {
                   ),
                 ),
               )
-            : Container(),
+            : const SizedBox.shrink(),
         _eventList(context, model),
       ],
     );
@@ -174,7 +163,7 @@ class _CalendarViewState extends State<CalendarView> {
                     shape: BoxShape.circle,
                   ),
                 ),
-                Container(
+                const SizedBox(
                   width: 10,
                 ),
                 Expanded(

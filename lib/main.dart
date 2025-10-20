@@ -29,8 +29,13 @@ class MyApp extends StatelessWidget {
           foregroundColor: Colors.white,
         ),
         radioTheme: RadioThemeData(
-          fillColor: WidgetStateColor.resolveWith((states) => R.primaryCol),
+          fillColor: WidgetStateColor.resolveWith((states) => R.textColSecondary),
         ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            foregroundColor: R.textColSecondary
+          )
+        )
       ),
       title: 'Placement',
       initialRoute: '/',

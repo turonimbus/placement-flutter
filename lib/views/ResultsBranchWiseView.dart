@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:placement/shared/loadingPage.dart';
-import 'package:placement/viewmodels/ResultsBranchWiseViewModel.dart';
-import 'package:placement/views/baseView.dart';
+
+import '../shared/ErrorWidget.dart';
+import '../shared/loadingPage.dart';
+import '../viewmodels/ResultsBranchWiseViewModel.dart';
+import 'baseView.dart';
 
 class ResultsBranchWiseView extends StatelessWidget {
   final int yearSelector, internSwitch, sortSwitch;
 
-  // FIX 1: Updated to modern, required constructor parameters.
   const ResultsBranchWiseView({
     super.key,
     required this.yearSelector,
@@ -33,30 +34,34 @@ class ResultsBranchWiseView extends StatelessWidget {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         model.setResultFilter(yearSelector, internSwitch, sortSwitch);
       });
+    }
+    if (model.isBusy){
       return Center(
         child: LoadingPage(),
       );
     }
-    
-    if (model.branchResults == null) {
+    final branchResults = model.branchResults;
+    if (branchResults == null){
+      return ErrorWidgetWithRefreshCallback(onRefresh: model.refreshResults);
+    }
+    if (branchResults.isEmpty) {
       return const Center(
         child: Text("No Results Found"),
       );
     }
-
     return RefreshIndicator(
       onRefresh: model.refreshResults,
       child: ListView.builder(
-        itemCount: model.branchResults.length,
+        itemCount: branchResults.length,
         padding: EdgeInsets.zero,
         itemBuilder: (context, index) {
-          final result = model.branchResults[index];
+          final result = branchResults[index];
           return Card(
             elevation: 0.3,
             margin: const EdgeInsets.only(bottom: 1),
             child: ListTile(
               title: Text(
-                result.studentBranchName!,
+                result.studentBranchName,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   height: 1.1,
@@ -66,7 +71,6 @@ class ResultsBranchWiseView extends StatelessWidget {
               subtitle: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // FIX 3: Using string interpolation for better readability.
                   Text(
                     "Degree: ${result.studentDegree}",
                     style: const TextStyle(height: 1.85),

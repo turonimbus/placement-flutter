@@ -9,8 +9,8 @@ import '../models/placement_exception.dart';
 
 class CandidateDetailsViewModel extends BaseViewModel {
   ApplyService _applyService = locator<ApplyService>();
-  CandidateModel? _candidate;
   AuthService _auth = AuthService();
+  CandidateModel? _candidate;
   CandidateModel? get candidate => _candidate;
 
   Future<void> fetchCandidate() async {

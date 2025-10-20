@@ -8,7 +8,7 @@ class DeleteService {
 
   Future<void> deleteApplicationService(int applicationID) async {
     print("HELLO!! im in!! DELETING $applicationID");
-    var res = await genericDeleteService(EndPoints.HOST +
+    await genericDeleteService(EndPoints.HOST +
         EndPoints.APPLICATIONS +
         applicationID.toString() +
         '/');

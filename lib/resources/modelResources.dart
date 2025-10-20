@@ -1,5 +1,5 @@
-import 'package:placement/models/resultModel.dart';
-import 'package:placement/models/yearModel.dart';
+import '../models/resultModel.dart';
+import '../models/yearModel.dart';
 
 class ModelResources {
 

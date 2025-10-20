@@ -13,25 +13,8 @@ class ProfilesForAllViewModel extends BaseViewModel {
   ApplyService _applyService = locator<ApplyService>();
   GlobalCache _cache = locator<GlobalCache>();
   DeleteService _deleteService = DeleteService();
-  List<ProfilesModel> _profiles = [];
-  bool _isDisposed = false;
-  bool _loading = false;
-  bool _isNull = false;
-  
-  List<ProfilesModel> get profiles => _profiles;
-  bool get isLoading => _loading;
-  bool get isNull => _isNull;
-
-  @override
-  void dispose() { 
-    print("DISPOSING FOR ALL!!");
-    _isDisposed = true;
-    super.dispose();
-  }
-
-  void notif() {
-    if(!_isDisposed) notifyListeners();
-  }
+  List<ProfilesModel>? _profiles = [];
+  List<ProfilesModel>? get profiles => _profiles;
 
   void _destroyProfileCache() {
     _cache.profilesOpenForAll = null;
@@ -54,13 +37,19 @@ class ProfilesForAllViewModel extends BaseViewModel {
   }
 
   String profileStatus(int index) {
-    if(_profiles[index].status == "locked") return _profiles[index].application.statusDisplayName;
-    else if(_profiles[index].status == "open" && _profiles[index].applicationDeadline !=null) {
-      String date = "Apply before " + formatDate(_profiles[index].applicationDeadline!);
+    final profiles = _profiles;
+    if (profiles == null) {
+      return "-";
+    };
+    if(profiles[index].status == "locked") return profiles[index].application.statusDisplayName ?? '-';
+    else if(profiles[index].status == "open" && profiles[index].applicationDeadline !=null) {
+      String date = "Apply before " + formatDate(profiles[index].applicationDeadline!);
       return date;
+    } else if (profiles[index].status == "withdrawable") {
+      final title = profiles[index].application?.resume?.title ?? "";
+      return title.isNotEmpty ? "$title Sent" : "Application Sent";
     }
-    else if(_profiles[index].status == "withdrawable") return _profiles[index].application.resume.title + " Sent";
-    return ModelResources.analyseProfileStatus(_profiles[index].status!);
+    return ModelResources.analyseProfileStatus(profiles[index].status);
   }
 
   Future<void> deleteApplication(int applicationId) async {
@@ -71,11 +60,8 @@ class ProfilesForAllViewModel extends BaseViewModel {
   
   Future<void> populateProfiles() async {
     print("POPULATING ALL");
-    _loading = true;
-    notif();
+    setLoading();
     _profiles = await _applyService.fetchProfileForAll();
-    if(_profiles == null) _isNull = true;
-    _loading = false;
-    notif();
+    setIdle();
   }
 }

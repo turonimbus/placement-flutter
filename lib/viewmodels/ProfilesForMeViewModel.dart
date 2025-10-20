@@ -1,12 +1,13 @@
 
 import 'package:jiffy/jiffy.dart';
-import 'package:placement/locator.dart';
-import 'package:placement/models/profilesModel.dart';
-import 'package:placement/resources/modelResources.dart';
-import 'package:placement/services/api_models/deleteService.dart';
-import 'package:placement/services/generic/applyService.dart';
-import 'package:placement/shared/GlobalCache.dart';
-import 'package:placement/viewmodels/BaseViewModel.dart';
+
+import '../locator.dart';
+import '../models/profilesModel.dart';
+import '../resources/modelResources.dart';
+import '../services/api_models/deleteService.dart';
+import '../services/generic/applyService.dart';
+import '../shared/GlobalCache.dart';
+import 'BaseViewModel.dart';
 
 class ProfilesForMeViewModel extends BaseViewModel {
 
@@ -14,24 +15,7 @@ class ProfilesForMeViewModel extends BaseViewModel {
   GlobalCache _cache = locator<GlobalCache>();
   DeleteService _deleteService = DeleteService();
   List<ProfilesModel>? _profiles= [];
-  bool _isDisposed = false;
-  bool _loading = false;
-  bool _isNull = false;
-  
   List<ProfilesModel>? get profiles => _profiles;
-  bool get isLoading => _loading;
-  bool get isNull => _isNull;
-
-  @override
-  void dispose() { 
-    _isDisposed = true;
-    print("DISPOSING FOR ME!!");
-    super.dispose();
-  }
-
-  void notif() {
-    if(!_isDisposed) notifyListeners();
-  }
 
   void _destroyProfileCache() {
     _cache.profilesForMe = null;
@@ -43,26 +27,20 @@ class ProfilesForMeViewModel extends BaseViewModel {
     return Jiffy.parse(it).toLocal().yMMMd + " - " + Jiffy.parse(it).toLocal().Hm;
   }
 
-   String profileStatus(int index) {
-    final profile = _profiles?[index];
-    if (profile == null) return "-";
-
-    final status = profile.status ?? "";
-
-    if (status == "locked") {
-      return profile.application?.statusDisplayName ?? "-";
-    }
-
-    if (status == "open" && profile.applicationDeadline != null) {
-      return "Apply before ${formatDate(profile.applicationDeadline!)}";
-    }
-
-    if (status == "withdrawable") {
-      final title = profile.application?.resume?.title ?? "";
+  String profileStatus(int index) {
+    final profiles = _profiles;
+    if (profiles == null) {
+      return "-";
+    };
+    if(profiles[index].status == "locked") return profiles[index].application.statusDisplayName ?? '-';
+    else if(profiles[index].status == "open" && profiles[index].applicationDeadline !=null) {
+      String date = "Apply before " + formatDate(profiles[index].applicationDeadline!);
+      return date;
+    } else if (profiles[index].status == "withdrawable") {
+      final title = profiles[index].application?.resume?.title ?? "";
       return title.isNotEmpty ? "$title Sent" : "Application Sent";
     }
-
-    return ModelResources.analyseProfileStatus(status);
+    return ModelResources.analyseProfileStatus(profiles[index].status);
   }
 
   Future<void> refreshAndWait() async {
@@ -82,11 +60,8 @@ class ProfilesForMeViewModel extends BaseViewModel {
   }
   
   Future<void> populateProfiles() async {
-    _loading = true;
-    notif();
+    setLoading();
     _profiles = await _applyService.fetchProfileForMe();
-    if(_profiles == null) _isNull = true;
-    _loading = false;
-    notif();
+    setIdle();
   }
 }

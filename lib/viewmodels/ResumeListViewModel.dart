@@ -7,11 +7,11 @@ import '../services/generic/applyService.dart';
 import 'BaseViewModel.dart';
 
 class ResumeListViewModel extends BaseViewModel {
-  List<ResumeModel> _resumes = [];
+  List<ResumeModel>? _resumes = [];
   ApplyService _applyService = locator<ApplyService>();
 
-  List<ResumeModel> get resumes => _resumes;
-  bool get isEmpty => (!isBusy) && (_resumes.length == 0);
+  List<ResumeModel>? get resumes => _resumes;
+  bool get isEmpty => (!isBusy) && (_resumes?.length == 0);
 
   Future<void> getResumes() async {
     setLoading();
@@ -23,7 +23,7 @@ class ResumeListViewModel extends BaseViewModel {
     if (await canLaunchUrlString(url)) {
       await launchUrlString(url);
     } else {
-      throw PlacementException('Could not launch $url');
+      throw PlacementException('Could not launch "$url"');
     }
   }
 }

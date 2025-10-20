@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../resources/R.dart';
-import '../../services/auth/auth_service.dart';
 import '../../views/CandidateDetailsView.dart';
 import '../../views/ResultPageView.dart';
 import '../../views/calendarView.dart';
@@ -17,8 +16,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  // ignore: unused_field
-  late AuthService _auth;
 
   final List<Tab> _bottomTab = const <Tab>[
     Tab(
@@ -42,7 +39,6 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    _auth = AuthService();
     _tabController = TabController(vsync: this, length: 4);
   }
 

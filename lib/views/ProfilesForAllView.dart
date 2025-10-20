@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:jiffy/jiffy.dart';
-import 'package:placement/shared/ProfileStatusIcon.dart';
-import 'package:placement/shared/loadingPage.dart';
-import 'package:placement/viewmodels/ProfilesForAllViewModel.dart';
-import 'package:placement/viewmodels/ProfilesForMeViewModel.dart';
-import 'package:placement/views/baseView.dart';
+
+import '../shared/ErrorWidget.dart';
+import '../shared/ProfileStatusIcon.dart';
+import '../shared/loadingPage.dart';
+import '../viewmodels/ProfilesForAllViewModel.dart';
+import 'baseView.dart';
 
 class ProfilesForAllView extends StatelessWidget {
   const ProfilesForAllView({super.key});
@@ -20,26 +20,25 @@ class ProfilesForAllView extends StatelessWidget {
   }
 
   Widget _applyWidget(BuildContext context, ProfilesForAllViewModel model) {
-    if (model.isLoading)
+    if (model.isBusy)
       return Center(
         child: LoadingPage(),
       );
-    return Container(
+    return ConstrainedBox(
       constraints: BoxConstraints.expand(),
       child: _applyList(context, model),
     );
   }
 
   Widget _applyList(BuildContext context, ProfilesForAllViewModel model) {
-    if (model.isNull)
-      return Center(
-        child: Text("Not Eligible for any Active season"),
-      );
+    final profiles = model.profiles;
+    if (profiles == null) {
+      return ErrorWidgetWithRefreshCallback(onRefresh: model.refreshAndWait);
+    }
     return RefreshIndicator(
       onRefresh: model.refreshAndWait,
       child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: model.profiles.length,
+        itemCount: profiles.length,
         padding: EdgeInsets.all(5),
         itemBuilder: (BuildContext context, int index) {
           return Card(
@@ -47,12 +46,12 @@ class ProfilesForAllView extends StatelessWidget {
               elevation: 0.3,
               child: ListTile(
                 title: Text(
-                  model.profiles[index].companyName! +
+                  profiles[index].companyName +
                       "(" +
-                      model.profiles[index].name! +
+                      profiles[index].name +
                       ")",
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold, height: 1.1, fontSize: 15),
                 ),
                 subtitle: Text(
@@ -63,16 +62,16 @@ class ProfilesForAllView extends StatelessWidget {
                 ),
                 onTap: () {
                   Navigator.of(context).pushNamed("/profileDetail", arguments: {
-                    "profileId": model.profiles[index].profileId,
+                    "profileId": profiles[index].profileId,
                     "parentViewModel": model,
-                    "profileModel": model.profiles[index]
+                    "profileModel": profiles[index]
                   });
                 },
                 //trailing: _profileStatusIcon(context,model.profiles[index].status,model.profiles[index])
                 trailing: ProfileStatusIcon(
                   model: model,
-                  profile: model.profiles[index],
-                  status: model.profiles[index].status!,
+                  profile: profiles[index],
+                  status: profiles[index].status,
                 ),
               ));
         },

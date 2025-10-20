@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:placement/resources/R.dart';
-import 'package:placement/screens/home/screens_for_apply/bottomModalApplySheet.dart';
+
+import '../models/profilesModel.dart';
+import '../resources/R.dart';
+import '../screens/home/screens_for_apply/bottomModalApplySheet.dart';
 
 class ProfileStatusIcon extends StatelessWidget {
   final String status;
-  final dynamic profile;
+  final ProfilesModel profile;
   final dynamic model;
   const ProfileStatusIcon({
     super.key,
