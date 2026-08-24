@@ -1,0 +1,57 @@
+name: release_stable
+
+# Stable release. Nothing here goes live on its own:
+#   - the Play production release is created as a draft, so you press Publish
+#     in the Play Console,
+#   - the iOS build goes to TestFlight, and you attach it to an App Store
+#     version and submit it for review by hand,
+#   - the GitHub release is created as a draft.
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump_type:
+        description: 'none = promote the version the betas were built against; minor/major/patch = release straight from stable'
+        type: choice
+        default: none
+        options:
+          - none
+          - minor
+          - patch
+          - major
+      build_ios:
+        description: Build iOS (uses a macOS runner)
+        type: boolean
+        default: true
+      publish_play:
+        description: Upload the App Bundle to the Play Console production track as a draft
+        type: boolean
+        default: false
+      publish_appstore:
+        description: Upload the IPA to TestFlight
+        type: boolean
+        default: false
+
+# Beta and stable share this group so two releases can never bump the version
+# at the same time.
+concurrency:
+  group: release-${{ github.repository }}
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  release:
+    uses: ./.github/workflows/release.yml
+    permissions:
+      contents: write
+      actions: read
+    secrets: inherit
+    with:
+      is_beta: false
+      bump_type: ${{ inputs.bump_type }}
+      build_ios: ${{ inputs.build_ios }}
+      publish_play: ${{ inputs.publish_play }}
+      publish_appstore: ${{ inputs.publish_appstore }}
+      play_track: production
+      play_status: draft

@@ -1,0 +1,66 @@
+default_platform(:ios)
+
+BUNDLE_ID = "com.channeli.img.placementonline".freeze
+
+platform :ios do
+  desc "Compile the app without code signing. Used by CI when no signing credentials are configured."
+  lane :ci_build_unsigned do
+    build_app(
+      workspace: "Runner.xcworkspace",
+      scheme: "Runner",
+      configuration: "Release",
+      skip_codesigning: true,
+      skip_package_ipa: true,
+      output_directory: "build",
+      clean: true
+    )
+  end
+
+  desc "Build a signed App Store IPA, and upload it to TestFlight when UPLOAD_TO_TESTFLIGHT=true."
+  lane :ci_release do
+    profile_name = ENV.fetch("IOS_PROVISIONING_PROFILE_NAME")
+
+    # The Xcode project uses automatic signing, which cannot work on a runner
+    # that has no Apple ID logged in, so pin it to the profile CI installed.
+    update_code_signing_settings(
+      path: "Runner.xcodeproj",
+      targets: ["Runner"],
+      use_automatic_signing: false,
+      code_sign_identity: "Apple Distribution",
+      profile_name: profile_name,
+      bundle_identifier: BUNDLE_ID,
+      team_id: ENV["FASTLANE_TEAM_ID"]
+    )
+
+    build_app(
+      workspace: "Runner.xcworkspace",
+      scheme: "Runner",
+      configuration: "Release",
+      export_method: "app-store",
+      output_directory: "build",
+      output_name: "placement.ipa",
+      clean: true,
+      export_options: {
+        provisioningProfiles: { BUNDLE_ID => profile_name },
+        # Flutter already stamped the pubspec version into Info.plist; letting
+        # Xcode manage it would overwrite the build number CI just bumped.
+        manageAppVersionAndBuildNumber: false
+      }
+    )
+
+    next unless ENV["UPLOAD_TO_TESTFLIGHT"] == "true"
+
+    api_key = app_store_connect_api_key(
+      key_id: ENV.fetch("APP_STORE_CONNECT_API_KEY_ID"),
+      issuer_id: ENV.fetch("APP_STORE_CONNECT_API_KEY_ISSUER_ID"),
+      key_filepath: ENV.fetch("APP_STORE_CONNECT_API_KEY_PATH")
+    )
+
+    upload_to_testflight(
+      api_key: api_key,
+      ipa: "build/placement.ipa",
+      skip_waiting_for_build_processing: true,
+      skip_submission: true
+    )
+  end
+end

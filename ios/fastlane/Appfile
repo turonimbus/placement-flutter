@@ -1,0 +1,4 @@
+app_identifier("com.channeli.img.placementonline")
+
+# Authentication uses an App Store Connect API key (see .github/RELEASING.md),
+# so no apple_id or itc_team_id is needed here.

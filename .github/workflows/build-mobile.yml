@@ -1,0 +1,276 @@
+name: build_mobile
+
+# Reusable build. Called by release.yml, but can also be dispatched on its own
+# to check that a branch still compiles for both platforms.
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: Commit to build
+        required: true
+        type: string
+      artifact_prefix:
+        description: Prefix used when naming release artefacts, e.g. v2.0.1-beta
+        required: true
+        type: string
+      build_ios:
+        description: Build the iOS app (consumes macOS runner minutes)
+        type: boolean
+        default: true
+      publish_play:
+        description: Upload the App Bundle to the Play Console
+        type: boolean
+        default: false
+      publish_appstore:
+        description: Upload the IPA to TestFlight
+        type: boolean
+        default: false
+      play_track:
+        description: Play Console track to publish to
+        type: string
+        default: internal
+      play_status:
+        description: Play Console release status (completed, draft, inProgress)
+        type: string
+        default: completed
+
+env:
+  FLUTTER_VERSION: '3.38.5'
+  PACKAGE_NAME: com.channeli.img.placementonline
+
+permissions: {}
+
+jobs:
+  build_android:
+    name: Build Android
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+          persist-credentials: false
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Restore keystore and signing config
+        env:
+          KEY_JKS: ${{ secrets.KEY_JKS }}
+          ALIAS: ${{ secrets.ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
+        run: |
+          if [ -z "$KEY_JKS" ]; then
+            echo "::error::KEY_JKS is not set, so the release build cannot be signed. See .github/RELEASING.md."
+            exit 1
+          fi
+          printf '%s' "$KEY_JKS" | base64 -d > android/app/upload-keystore.jks
+          # storeFile is resolved by android/app/build.gradle, so it is relative
+          # to android/app, while key.properties itself is read from android/.
+          cat > android/key.properties <<EOF
+          storeFile=upload-keystore.jks
+          storePassword=${ANDROID_STORE_PASSWORD}
+          keyAlias=${ALIAS}
+          keyPassword=${ANDROID_KEY_PASSWORD}
+          EOF
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build APKs and App Bundle
+        env:
+          PREFIX: ${{ inputs.artifact_prefix }}
+        run: |
+          flutter build apk --release --split-per-abi
+          flutter build appbundle --release
+
+          mkdir -p build_final
+          for abi in arm64-v8a armeabi-v7a x86_64; do
+            src="build/app/outputs/flutter-apk/app-${abi}-release.apk"
+            if [ -f "$src" ]; then
+              cp "$src" "build_final/placement-${PREFIX}-${abi}.apk"
+            fi
+          done
+          cp build/app/outputs/bundle/release/app-release.aab "build_final/placement-${PREFIX}.aab"
+          ls -lh build_final
+
+      - name: Upload APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apks
+          path: build_final/*.apk
+          if-no-files-found: error
+
+      - name: Upload App Bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-aab
+          path: build_final/*.aab
+          if-no-files-found: error
+
+      - name: Check Play Console credentials
+        if: ${{ inputs.publish_play }}
+        env:
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+        run: |
+          if [ -z "$PLAY_SERVICE_ACCOUNT_JSON" ]; then
+            echo "::error::A Play upload was requested but PLAY_SERVICE_ACCOUNT_JSON is not set. See .github/RELEASING.md."
+            exit 1
+          fi
+
+      - name: Upload to Play Console (${{ inputs.play_track }} / ${{ inputs.play_status }})
+        if: ${{ inputs.publish_play }}
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: ${{ env.PACKAGE_NAME }}
+          releaseFiles: build_final/*.aab
+          track: ${{ inputs.play_track }}
+          status: ${{ inputs.play_status }}
+
+  build_ios:
+    name: Build iOS
+    if: ${{ inputs.build_ios }}
+    runs-on: macos-15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+          persist-credentials: false
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+          working-directory: ios
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate Xcode config
+        # Writes ios/Flutter/Generated.xcconfig, which stamps the pubspec
+        # version into Info.plist and is a precondition for `pod install`.
+        run: flutter build ios --config-only --release --no-codesign
+
+      - name: Install pods
+        working-directory: ios
+        run: pod install --repo-update
+
+      - name: Detect iOS signing credentials
+        id: signing
+        env:
+          IOS_CERTIFICATE_P12: ${{ secrets.IOS_CERTIFICATE_P12 }}
+          IOS_PROVISIONING_PROFILE: ${{ secrets.IOS_PROVISIONING_PROFILE }}
+          APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+        run: |
+          if [ -n "$IOS_CERTIFICATE_P12" ] && [ -n "$IOS_PROVISIONING_PROFILE" ] && [ -n "$APP_STORE_CONNECT_API_KEY" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::iOS signing secrets are not configured, so this job only checks that the app compiles."
+          fi
+
+      - name: Check App Store credentials
+        if: ${{ inputs.publish_appstore && steps.signing.outputs.available != 'true' }}
+        run: |
+          echo "::error::A TestFlight upload was requested but IOS_CERTIFICATE_P12, IOS_PROVISIONING_PROFILE and APP_STORE_CONNECT_API_KEY are not all set. See .github/RELEASING.md."
+          exit 1
+
+      - name: Import certificate and provisioning profile
+        if: ${{ steps.signing.outputs.available == 'true' }}
+        env:
+          IOS_CERTIFICATE_P12: ${{ secrets.IOS_CERTIFICATE_P12 }}
+          IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+          IOS_PROVISIONING_PROFILE: ${{ secrets.IOS_PROVISIONING_PROFILE }}
+        run: |
+          KEYCHAIN_PASSWORD=$(uuidgen)
+          echo "::add-mask::$KEYCHAIN_PASSWORD"
+          echo "KEYCHAIN_PASSWORD=$KEYCHAIN_PASSWORD" >> "$GITHUB_ENV"
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security set-keychain-settings -lut 3600 build.keychain
+
+          echo "$IOS_CERTIFICATE_P12" | base64 --decode > certificate.p12
+          security import certificate.p12 -k build.keychain -P "$IOS_CERTIFICATE_PASSWORD" \
+            -T /usr/bin/codesign -T /usr/bin/security
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" build.keychain
+          rm -f certificate.p12
+          security find-identity -v -p codesigning build.keychain
+
+          PROFILES="$HOME/Library/MobileDevice/Provisioning Profiles"
+          mkdir -p "$PROFILES"
+          echo "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$PROFILES/build.mobileprovision"
+
+          # Read the profile name out of the profile itself rather than carrying
+          # it around as yet another secret.
+          PROFILE_NAME=$(security cms -D -i "$PROFILES/build.mobileprovision" | plutil -extract Name raw -)
+          echo "IOS_PROVISIONING_PROFILE_NAME=$PROFILE_NAME" >> "$GITHUB_ENV"
+          echo "Installed provisioning profile: $PROFILE_NAME"
+
+      - name: Write App Store Connect API key
+        if: ${{ steps.signing.outputs.available == 'true' }}
+        env:
+          APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+        run: |
+          KEY_DIR="$HOME/.appstoreconnect/private_keys"
+          mkdir -p "$KEY_DIR"
+          KEY_PATH="${KEY_DIR}/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
+          echo "$APP_STORE_CONNECT_API_KEY" | base64 --decode > "$KEY_PATH"
+          echo "APP_STORE_CONNECT_API_KEY_PATH=$KEY_PATH" >> "$GITHUB_ENV"
+
+      - name: Compile only (no signing credentials)
+        if: ${{ steps.signing.outputs.available != 'true' }}
+        # Advisory while there is nothing to ship: a broken unsigned compile is
+        # worth an annotation, but it should not block an Android release. Once
+        # signing secrets exist the signed path below runs instead, and that one
+        # does block.
+        continue-on-error: true
+        working-directory: ios
+        run: bundle exec fastlane ci_build_unsigned
+
+      - name: Build signed IPA
+        if: ${{ steps.signing.outputs.available == 'true' }}
+        working-directory: ios
+        env:
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
+          FASTLANE_TEAM_ID: ${{ secrets.FASTLANE_TEAM_ID }}
+          UPLOAD_TO_TESTFLIGHT: ${{ inputs.publish_appstore }}
+          FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: 120
+          FASTLANE_XCODEBUILD_SETTINGS_RETRIES: 6
+        run: bundle exec fastlane ci_release
+
+      - name: Upload IPA artifact
+        if: ${{ steps.signing.outputs.available == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-ipa
+          path: ios/build/*.ipa
+          if-no-files-found: error
+
+      - name: Delete temporary keychain
+        if: always()
+        run: security delete-keychain build.keychain || true

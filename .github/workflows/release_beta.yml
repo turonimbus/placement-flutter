@@ -1,0 +1,56 @@
+name: release_beta
+
+# Beta release: Play Console internal track, TestFlight, and a GitHub
+# prerelease that is published straight away.
+#
+# Tagged v<version>-beta.<n>, the counter climbing while the version name holds
+# still, so a run of betas reads v2.6.0-beta.1, v2.6.0-beta.2, v2.6.0-beta.3.
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump_type:
+        description: 'none = another beta for the current version; minor/major/patch = start a beta series for the next one'
+        type: choice
+        default: none
+        options:
+          - none
+          - minor
+          - major
+          - patch
+      build_ios:
+        description: Build iOS
+        type: boolean
+        default: true
+      publish_play:
+        description: Upload the App Bundle to the Play Console internal track
+        type: boolean
+        default: false
+      publish_appstore:
+        description: Upload the IPA to TestFlight
+        type: boolean
+        default: false
+
+# Beta and stable share this group so two releases can never bump the version
+# at the same time.
+concurrency:
+  group: release-${{ github.repository }}
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  release:
+    uses: ./.github/workflows/release.yml
+    permissions:
+      contents: write
+      actions: read
+    secrets: inherit
+    with:
+      is_beta: true
+      bump_type: ${{ inputs.bump_type }}
+      build_ios: ${{ inputs.build_ios }}
+      publish_play: ${{ inputs.publish_play }}
+      publish_appstore: ${{ inputs.publish_appstore }}
+      play_track: internal
+      play_status: completed
