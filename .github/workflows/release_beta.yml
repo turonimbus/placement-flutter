@@ -37,4 +37,4 @@ jobs:
       bump_type: ${{ inputs.bump_type }}
       publish_play: ${{ inputs.publish_play }}
       play_track: internal
-      play_status: completed
+      play_status: draft
