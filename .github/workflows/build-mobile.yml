@@ -120,7 +120,14 @@ jobs:
             exit 1
           fi
           PLAY_JSON_KEY_PATH="$RUNNER_TEMP/play-service-account.json"
-          printf '%s' "$PLAY_SERVICE_ACCOUNT_JSON" > "$PLAY_JSON_KEY_PATH"
+          printf '%s' "$PLAY_SERVICE_ACCOUNT_JSON" | base64 -d > "$PLAY_JSON_KEY_PATH" || {
+            echo "::error::PLAY_SERVICE_ACCOUNT_JSON is not valid base64. Set it with: gh secret set PLAY_SERVICE_ACCOUNT_JSON < <(base64 -w0 key.json)"
+            exit 1
+          }
+          jq empty "$PLAY_JSON_KEY_PATH" || {
+            echo "::error::PLAY_SERVICE_ACCOUNT_JSON decoded to something that is not JSON. Encode the service account key file itself, unmodified."
+            exit 1
+          }
           export PLAY_JSON_KEY_PATH
           export AAB_PATH="${GITHUB_WORKSPACE}/build_final/placement-${{ inputs.artifact_prefix }}.aab"
           bundle exec fastlane ci_publish
