@@ -38,6 +38,7 @@ class RequestService {
         print("GOT 200");
         return json.decode(res.body);
       }
+      return -1;
     } catch (e) {
       print(e.toString());
       print("POST REQUEST FAILED");
