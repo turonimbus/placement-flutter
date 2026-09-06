@@ -23,10 +23,6 @@ on:
         type: string
         default: completed
 
-env:
-  FLUTTER_VERSION: '3.38.5'
-  PACKAGE_NAME: com.channeli.img.placementonline
-
 permissions: {}
 
 jobs:
@@ -47,7 +43,7 @@ jobs:
           cache: gradle
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
+          flutter-version: ${{ vars.FLUTTER_VERSION }}
           channel: stable
           cache: true
       - name: Restore keystore and signing config
@@ -111,7 +107,7 @@ jobs:
         working-directory: android
         env:
           PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
-          PACKAGE_NAME: ${{ env.PACKAGE_NAME }}
+          PACKAGE_NAME: ${{ vars.PACKAGE_NAME }}
           PLAY_TRACK: ${{ inputs.play_track }}
           PLAY_STATUS: ${{ inputs.play_status }}
         run: |
